@@ -1,0 +1,56 @@
+/* File: css/viewer.css */
+/* Author: Laura Sanz Lobo */
+
+/* ===================== MODO VISOR (QR ESCANEADO) ===================== */
+.viewer-screen {
+  max-width: 480px;
+  align-items: center;
+  text-align: center;
+  padding-top: clamp(4vh, 8vh, 14vh);
+  justify-content: flex-start;
+}
+.viewer-eyebrow {
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  color: var(--mind);
+  flex-shrink: 0;
+}
+.viewer-title { margin: 6px 0 0; font-size: clamp(1.5rem, 6vh, 2.6rem); flex-shrink: 0; }
+.viewer-hint { color: var(--text-dim); font-size: 0.85rem; max-width: 32ch; margin: 6px 0 clamp(12px, 3vh, 26px); flex-shrink: 0; }
+.viewer-cards {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(6px, 1.4vh, 10px);
+  width: 100%;
+  min-height: 0;
+  overflow-y: auto;
+}
+.viewer-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: clamp(10px, 2.2vh, 16px);
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.2rem, 4vh, 1.6rem);
+  animation: pop-in .3s ease both;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity .15s ease, transform .1s ease, background-color .15s ease, border-color .15s ease;
+}
+.viewer-card:active { transform: scale(0.98); }
+.viewer-card.is-primary {
+  border-color: var(--mind);
+  background: var(--mind-dim);
+  box-shadow: 0 0 24px -8px var(--mind-glow);
+}
+.viewer-card.is-played {
+  opacity: 0.2;
+  background-color: var(--void);
+  border-color: transparent;
+  text-decoration: none;
+  transform: scale(0.96);
+}
+.viewer-empty { color: var(--text-dim); font-size: 0.95rem; }
