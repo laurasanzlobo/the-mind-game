@@ -1,6 +1,9 @@
-/* File: main.css */
+/* css/main.css */
 /* Author: Laura Sanz Lobo */
 
+/* ===================================================================
+   TOKENS DE DISEÑO
+   =================================================================== */
 :root {
   --void: #0a0a13;
   --panel: #14131f;
@@ -81,4 +84,141 @@ button {
     animation-iteration-count: 1 !important; 
     transition-duration: 0.001ms !important; 
   }
+}
+
+/* ===================== ESTRUCTURA GENERAL ===================== */
+#app {
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.screen {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: clamp(10px, 2.2vh, 28px) clamp(16px, 4vw, 56px) clamp(10px, 2vh, 24px);
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(8px, 1.6vh, 24px);
+  overflow: hidden;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-faint);
+  letter-spacing: 0.14em;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+}
+
+.brand-mark {
+  width: 16px; 
+  height: 16px;
+  border-radius: 50%;
+  background: conic-gradient(from 220deg, var(--mind), transparent 65%);
+  box-shadow: 0 0 12px var(--mind-glow);
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.icon-btn {
+  width: 38px; 
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--text-dim);
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: border-color .15s ease, color .15s ease, transform .15s ease;
+}
+.icon-btn:hover { border-color: var(--line-strong); color: var(--text); }
+.icon-btn:active { transform: scale(0.94); }
+
+/* ===================== BOTONES PRIMARIOS ===================== */
+.btn {
+  appearance: none;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: clamp(11px, 2vh, 16px) clamp(14px, 3vw, 20px);
+  font-size: clamp(0.88rem, 2vh, 1rem);
+  font-weight: 600;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: transform .12s ease, filter .15s ease, opacity .15s ease;
+}
+.btn:active { transform: scale(0.97); }
+
+.btn-primary {
+  background: var(--mind);
+  color: #0a0a13;
+  box-shadow: 0 12px 30px -12px var(--mind-glow);
+}
+.btn-primary:hover { filter: brightness(1.08); }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-dim);
+  border: 1px solid var(--line);
+}
+.btn-ghost:hover { border-color: var(--line-strong); color: var(--text); }
+
+.btn[disabled] { opacity: 0.35; cursor: not-allowed; }
+.btn-block { width: 100%; }
+
+/* ===================== PROGRESO DE NIVELES ===================== */
+.level-track {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.level-dot {
+  width: 9px; 
+  height: 9px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1px solid var(--line-strong);
+}
+.level-dot.is-done { background: var(--text-faint); border-color: var(--text-faint); }
+.level-dot.is-current {
+  background: var(--mind);
+  border-color: var(--mind);
+  box-shadow: 0 0 0 4px var(--mind-dim);
+}
+
+.level-heading { display: flex; flex-direction: column; gap: clamp(6px, 1.2vh, 10px); flex-shrink: 0; }
+.level-heading h2 { margin: 0; font-size: clamp(1.1rem, 3.2vh, 1.4rem); font-weight: 600; }
+.level-heading p { margin: 0; color: var(--text-dim); font-size: clamp(0.8rem, 1.9vh, 0.9rem); }
+
+.level-heading-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.level-reward {
+  font-size: clamp(0.76rem, 1.8vh, 0.86rem);
+  font-weight: 700;
+  white-space: nowrap;
 }
