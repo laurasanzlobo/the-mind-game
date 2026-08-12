@@ -2,7 +2,7 @@
 // Author: Laura Sanz Lobo
 
 import { state, resetState } from './state.js';
-import { REWARDS, MAX_LIVES, MAX_STARS } from './config.js';
+import { CONFIG, REWARDS, MAX_LIVES, MAX_STARS } from './config.js';
 import { soundOk, soundError, soundNinja, soundLevelUp, soundVictory, soundDefeat, toggleSound } from './audio.js';
 import { renderSetup } from './views/step-players.js';
 import { renderDeal, mountQrCodes } from './views/deal.js';
