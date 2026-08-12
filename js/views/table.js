@@ -1,11 +1,8 @@
-// File: js/views/table.js
-// Author: Laura Sanz Lobo
-
+// js/views/table.js
 import { state, playerLabel } from '../state.js';
 import { REWARDS, MAX_LIVES, MAX_STARS } from '../config.js';
 import { brandMark } from './step-players.js';
 
-// Escapo el HTML para prevenir inyecciones y problemas con caracteres especiales
 function escapeHtml(str) {
   return String(str)
     .replace(/&/g, '&amp;')
@@ -22,8 +19,6 @@ function rewardLabel(level) {
   return null;
 }
 
-// Inyecto las fichas rojas o de estrella ninja directamente en el botón del jugador
-// para que asuman la rotación correcta en la vista de tablet.
 function renderPlayerIndicators(pIndex) {
   let chips = '';
   const ninjaCard = state.ninjaDiscards && state.ninjaDiscards[pIndex];
@@ -47,22 +42,41 @@ function renderLevelUpOverlay() {
   return `<div class="levelup-bar"><button class="btn btn-primary btn-compact" onclick="window.continueGame()">${btnLabel}</button></div>`;
 }
 
-// Coordenadas matemáticas precisas para el modo tablet (empujando a los extremos)
+// Coordenadas para el iPad (apaisado)
 const TABLET_POSITIONS = {
   2: [
     'top:50%; left:12%; transform:translate(-50%,-50%) rotate(90deg);',
     'top:50%; left:88%; transform:translate(-50%,-50%) rotate(-90deg);',
   ],
   3: [
-    'top:15%; left:50%; transform:translate(-50%,-50%) rotate(180deg);',
-    'top:68%; left:19%; transform:translate(-50%,-50%) rotate(60deg);',
-    'top:68%; left:81%; transform:translate(-50%,-50%) rotate(-60deg);',
+    'top:22%; left:10%; transform:translate(-50%,-50%) rotate(135deg);',
+    'top:22%; left:90%; transform:translate(-50%,-50%) rotate(-135deg);',
+    'top:78%; left:10%; transform:translate(-50%,-50%) rotate(45deg);',
   ],
   4: [
     'top:22%; left:10%; transform:translate(-50%,-50%) rotate(135deg);',
     'top:22%; left:90%; transform:translate(-50%,-50%) rotate(-135deg);',
     'top:78%; left:90%; transform:translate(-50%,-50%) rotate(-45deg);',
     'top:78%; left:10%; transform:translate(-50%,-50%) rotate(45deg);',
+  ],
+};
+
+// He calculado las nuevas coordenadas verticales para el móvil
+const MOBILE_POSITIONS = {
+  2: [
+    'top:12%; left:50%; transform:translate(-50%,-50%) rotate(180deg);',
+    'top:88%; left:50%; transform:translate(-50%,-50%) rotate(0deg);',
+  ],
+  3: [
+    'top:12%; left:50%; transform:translate(-50%,-50%) rotate(180deg);',
+    'top:88%; left:22%; transform:translate(-50%,-50%) rotate(0deg);',
+    'top:88%; left:78%; transform:translate(-50%,-50%) rotate(0deg);',
+  ],
+  4: [
+    'top:12%; left:25%; transform:translate(-50%,-50%) rotate(180deg);',
+    'top:12%; left:75%; transform:translate(-50%,-50%) rotate(180deg);',
+    'top:88%; left:75%; transform:translate(-50%,-50%) rotate(0deg);',
+    'top:88%; left:25%; transform:translate(-50%,-50%) rotate(0deg);',
   ],
 };
 
@@ -77,8 +91,13 @@ export function renderTable() {
   }
 
   const paused = !!state.pendingContinue;
-  const isTablet = state.layoutMode === 'tablet' && TABLET_POSITIONS[state.numPlayers];
-  const positions = isTablet ? TABLET_POSITIONS[state.numPlayers] : null;
+  const isTablet = state.layoutMode === 'tablet';
+  const isMobile = state.layoutMode === 'mobile';
+  const isCircular = isTablet || isMobile;
+
+  let positions = null;
+  if (isTablet && TABLET_POSITIONS[state.numPlayers]) positions = TABLET_POSITIONS[state.numPlayers];
+  if (isMobile && MOBILE_POSITIONS[state.numPlayers]) positions = MOBILE_POSITIONS[state.numPlayers];
 
   let playerButtons = '';
   for (let p = 0; p < state.numPlayers; p++) {
@@ -121,8 +140,8 @@ export function renderTable() {
       ${pileMessage}
     </div>`;
 
-  const tableAreaHtml = isTablet
-    ? `<div class="round-table">${pileHtml}${playerButtons}</div>`
+  const tableAreaHtml = isCircular
+    ? `<div class="round-table${isMobile ? ' layout-mobile-table' : ''}">${pileHtml}${playerButtons}</div>`
     : `<div class="table-area">${pileHtml}<div class="players-grid">${playerButtons}</div></div>`;
 
   const errorContinueHtml = (state.pendingContinue && state.pendingContinue.type === 'error')
@@ -135,7 +154,7 @@ export function renderTable() {
   const levelRewardHtml = reward ? `<span class="level-reward ${rewardCls}">Recompensa: ${reward}</span>` : '';
 
   return `
-    <div class="screen screen-table${isTablet ? ' layout-tablet' : ''}">
+    <div class="screen screen-table${isCircular ? ' layout-tablet' : ''}">
       <div class="topbar">
         ${brandMark()}
         <div style="display:flex; gap:8px;">
