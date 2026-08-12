@@ -38,7 +38,6 @@ export function renderNameForm(renderCallback) {
       names.push(value || `Jugador ${p + 1}`);
     }
 
-    // Configuro los parámetros iniciales en el estado global
     const cfg = CONFIG[num];
     state.playerNames = names;
     state.numPlayers = num;
@@ -49,10 +48,8 @@ export function renderNameForm(renderCallback) {
     state.setupStep = 'count';
     state.pendingNumPlayers = null;
     
-    // Paso directamente al reparto de las cartas
     state.screen = 'deal';
     
-    // Importo dinámicamente la función de empezar el nivel para evitar dependencias circulares complejas
     import('../main.js').then(module => {
       module.startLevel();
       if (renderCallback) renderCallback();
@@ -71,10 +68,15 @@ export function renderNameForm(renderCallback) {
       <div>
         <h1 class="setup-title">Nombres de los jugadores</h1>
       </div>
-      <div class="name-form">${fields}</div>
-      <div class="name-form-actions">
-        <button class="btn btn-primary btn-block" onclick="confirmPlayerNames()">Comenzar partida</button>
-        <button class="btn btn-ghost btn-block" onclick="backToPlayerCount()">Volver</button>
+      
+      <div class="setup-content-wrapper">
+        <div class="name-form">${fields}</div>
+        <div class="name-form-actions">
+          <button class="btn btn-primary btn-block" onclick="confirmPlayerNames()">Comenzar partida</button>
+          <button class="btn btn-ghost btn-block" onclick="backToPlayerCount()">Volver</button>
+        </div>
       </div>
+      
+      <div class="footnote">Creado por Laura Sanz Lobo</div>
     </div>`;
 }

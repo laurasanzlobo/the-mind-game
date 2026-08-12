@@ -7,11 +7,10 @@ import { renderDeviceToggle } from './step-device.js';
 import { renderNameForm } from './step-names.js';
 
 export function brandMark() {
-  return '<div class="brand"><span class="brand-mark"></span><span>The Mind</span></div>';
+  return '<div class="brand" style="justify-content: center;"><span class="brand-mark"></span><span>The Mind</span></div>';
 }
 
 export function renderSetup(renderCallback) {
-  // Si ya he almacenado un número de jugadores, pinto automáticamente el formulario de nombres
   if (state.setupStep === 'names' && state.pendingNumPlayers) {
     return renderNameForm(renderCallback);
   }
@@ -19,8 +18,10 @@ export function renderSetup(renderCallback) {
   let options = '';
   [2, 3, 4].forEach(n => {
     const cfg = CONFIG[n];
+    const isActive = state.pendingNumPlayers === n ? ' is-active' : '';
+    
     options += `
-      <button class="player-opt" onclick="chooseNumPlayers(${n})">
+      <button class="player-opt${isActive}" onclick="window.selectNumPlayers(${n})">
         <span class="player-opt-num">${n}</span>
         <span class="player-opt-body">
           <span class="player-opt-label">${n} jugadores</span>
@@ -29,21 +30,39 @@ export function renderSetup(renderCallback) {
       </button>`;
   });
 
-  window.chooseNumPlayers = (n) => {
+  // Guardar la selección visualmente sin cambiar de pantalla
+  window.selectNumPlayers = (n) => {
     state.pendingNumPlayers = n;
+    if (renderCallback) renderCallback();
+  };
+
+  // Pasar a la pantalla de nombres solo al pulsar "Comenzar"
+  window.goToNames = () => {
+    if (!state.pendingNumPlayers) return;
     state.setupStep = 'names';
     if (renderCallback) renderCallback();
   };
+
+  const isBtnDisabled = !state.pendingNumPlayers ? 'disabled' : '';
 
   return `
     <div class="screen screen-setup">
       ${brandMark()}
       <div>
         <h1 class="setup-title">Juego The Mind</h1>
-        <p class="setup-sub">Creado por Laura Sanz Lobo</p>
       </div>
-      ${renderDeviceToggle(renderCallback)}
-      <div class="player-select">${options}</div>
-      <div class="footnote">Cada nivel se reparte en privado mediante un código QR individual. Cada persona verá exclusivamente su propia mano.</div>
+      
+      <div class="setup-content-wrapper">
+        ${renderDeviceToggle(renderCallback)}
+        
+        <div class="player-select">
+          <span class="device-mode-label">Número de jugadores</span>
+          ${options}
+        </div>
+
+        <button class="btn btn-primary btn-block" ${isBtnDisabled} onclick="window.goToNames()">Comenzar</button>
+      </div>
+
+      <div class="footnote">Creado por Laura Sanz Lobo</div>
     </div>`;
 }
