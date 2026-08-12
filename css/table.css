@@ -1,4 +1,4 @@
-/* File: css/table.css */
+/* css/table.css */
 /* Author: Laura Sanz Lobo */
 
 /* ===================== PANTALLA: REPARTO / QR ===================== */
@@ -311,6 +311,13 @@
   padding: 0;
   width: min(40vw, 220px);
 }
+
+/* Corrijo la posición de los mensajes para que floten correctamente bajo la pila central en el modo Tablet */
+.round-table .pile-error, 
+.round-table .pile-success {
+  bottom: -24px; 
+}
+
 .round-table .player-btn {
   position: absolute;
   width: 152px; height: 108px;
