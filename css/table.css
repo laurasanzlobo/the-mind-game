@@ -425,16 +425,32 @@
 }
 
 /* ===================================================================
-   POSICIONAMIENTO LATERAL DE INDICADORES PARA MÓVIL (2 JUGADORES)
+   INDICADORES A AMBOS LADOS PARA MÓVIL (2 JUGADORES)
    =================================================================== */
 
-/* Detecta exactamente el modo móvil con 2 jugadores y desplaza las fichas a la derecha */
+/* Contenedor general de indicadores en móvil de 2 jugadores */
 .round-table.layout-mobile-table:has(.player-btn:nth-child(3):last-child) .player-discard-indicators {
   position: absolute;
   top: 50%;
-  left: calc(100% + 14px);
+  left: 0;
+  right: 0;
   transform: translateY(-50%);
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 4px;
+  display: flex;
+  pointer-events: none;
+}
+
+/* Primera ficha (ej. Estrella Ninja u otro indicador): Se desplaza a la izquierda del botón */
+.round-table.layout-mobile-table:has(.player-btn:nth-child(3):last-child) .player-discard-indicators .table-chip:nth-child(1) {
+  position: absolute;
+  right: calc(100% + 14px);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Segunda ficha (ej. Fichas de error): Se desplaza a la derecha del botón */
+.round-table.layout-mobile-table:has(.player-btn:nth-child(3):last-child) .player-discard-indicators .table-chip:nth-child(2) {
+  position: absolute;
+  left: calc(100% + 14px);
+  top: 50%;
+  transform: translateY(-50%);
 }
