@@ -425,32 +425,26 @@
 }
 
 /* ===================================================================
-   INDICADORES A AMBOS LADOS PARA MÓVIL (2 JUGADORES)
+   INDICADORES SEPARADOS A AMBOS LADOS PARA MÓVIL (2 JUGADORES)
    =================================================================== */
 
-/* Contenedor general de indicadores en móvil de 2 jugadores */
-.round-table.layout-mobile-table:has(.player-btn:nth-child(3):last-child) .player-discard-indicators {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  transform: translateY(-50%);
-  display: flex;
-  pointer-events: none;
-}
-
-/* Primera ficha (ej. Estrella Ninja u otro indicador): Se desplaza a la izquierda del botón */
-.round-table.layout-mobile-table:has(.player-btn:nth-child(3):last-child) .player-discard-indicators .table-chip:nth-child(1) {
+/* Posicionamiento del indicador izquierdo (Estrella Ninja) */
+.round-table.layout-mobile-table:has(.player-btn:nth-child(3):last-child) .player-discard-indicators-left {
   position: absolute;
   right: calc(100% + 14px);
   top: 50%;
   transform: translateY(-50%);
+  pointer-events: none;
 }
 
-/* Segunda ficha (ej. Fichas de error): Se desplaza a la derecha del botón */
-.round-table.layout-mobile-table:has(.player-btn:nth-child(3):last-child) .player-discard-indicators .table-chip:nth-child(2) {
+/* Posicionamiento del indicador derecho (Errores) */
+.round-table.layout-mobile-table:has(.player-btn:nth-child(3):last-child) .player-discard-indicators-right {
   position: absolute;
   left: calc(100% + 14px);
   top: 50%;
   transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  pointer-events: none;
 }

@@ -20,18 +20,28 @@ function rewardLabel(level) {
 }
 
 function renderPlayerIndicators(pIndex) {
-  let chips = '';
+  let ninjaChip = '';
   const ninjaCard = state.ninjaDiscards && state.ninjaDiscards[pIndex];
   if (ninjaCard !== null && ninjaCard !== undefined) {
-    chips += `<div class="table-chip ninja">${ninjaCard}</div>`;
+    ninjaChip = `<div class="table-chip ninja">${ninjaCard}</div>`;
   }
+
+  let errorChips = '';
   const errCards = state.errorDiscards && state.errorDiscards[pIndex];
   if (errCards && errCards.length > 0) {
     errCards.forEach(c => {
-      chips += `<div class="table-chip error">${c}</div>`;
+      errorChips += `<div class="table-chip error">${c}</div>`;
     });
   }
-  return chips ? `<span class="player-discard-indicators">${chips}</span>` : '';
+
+  // Si no hay nada, no devolvemos nada
+  if (!ninjaChip && !errorChips) return '';
+
+  // Devolvemos ambos contenedores separados para que el CSS los mueva a los lados
+  return `
+    <span class="player-discard-indicators-left">${ninjaChip}</span>
+    <span class="player-discard-indicators-right">${errorChips}</span>
+  `;
 }
 
 function renderLevelUpOverlay() {
