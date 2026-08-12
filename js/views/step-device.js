@@ -25,7 +25,7 @@ export function renderDeviceToggle(renderCallback) {
       </button>
       <button class="device-mode-btn ${mode === 'tablet' ? 'is-active' : ''}" onclick="window.setLayoutMode('tablet')">
         <span class="device-mode-icon">🔄</span>
-        <span>iPad / Tablet (Mesa Redonda)</span>
+        <span>iPad / Tablet </span>
       </button>
     </div>
   `;

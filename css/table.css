@@ -364,7 +364,52 @@
 .end-sub { color: var(--text-dim); max-width: none; white-space: nowrap; margin: 0; }
 .end-actions { display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 280px; margin-top: 10px; }
 
-/* Modificadores para que la mesa se adapte en formato vertical (Modo Móvil) */
+/* ===================================================================
+   AJUSTES ESPECÍFICOS PARA EL MODO MÓVIL
+   =================================================================== */
+
+/* 1. Reducir ligeramente el tamaño de los botones de los jugadores en móvil */
+.round-table.layout-mobile-table .player-btn {
+  width: 124px; 
+  height: 88px;
+  min-width: 124px; 
+  min-height: 88px; 
+  max-width: 124px; 
+  max-height: 88px;
+  padding: 12px 10px;
+}
+.round-table.layout-mobile-table .player-btn-name { 
+  font-size: clamp(0.95rem, 2.2vh, 1.15rem); 
+}
+.round-table.layout-mobile-table .player-btn-count { 
+  font-size: clamp(0.75rem, 1.5vh, 0.85rem); 
+  padding: 2px 8px;
+}
+
+/* 2. Reducir ligeramente el tamaño del círculo central (la pila) en móvil */
+.round-table.layout-mobile-table .pile-ring {
+  width: min(24vh, 34vw, 170px);
+  height: min(24vh, 34vw, 170px);
+}
+.round-table.layout-mobile-table .pile-number {
+  font-size: clamp(2rem, 9vh, 3.6rem);
+}
+
+/* 3. Reducir sutilmente las barras flotantes inferiores (Acciones, Continuar, Nivel) */
+.screen.screen-table.layout-tablet .continue-bar,
+.screen.screen-table.layout-tablet .levelup-bar,
+.screen.screen-table.layout-tablet .ninja-btn {
+  max-width: 90%;
+  margin: 0 auto;
+}
+
+.screen.screen-table.layout-tablet .ninja-btn,
+.screen.screen-table.layout-tablet .continue-bar .btn,
+.screen.screen-table.layout-tablet .levelup-bar .btn-compact {
+  padding: clamp(8px, 1.5vh, 12px) clamp(12px, 2.5vw, 16px);
+  font-size: clamp(0.82rem, 1.8vh, 0.92rem);
+}
+
 .round-table.layout-mobile-table {
   aspect-ratio: 9 / 16;
   max-width: 100%;
