@@ -1,0 +1,84 @@
+/* File: main.css */
+/* Author: Laura Sanz Lobo */
+
+:root {
+  --void: #0a0a13;
+  --panel: #14131f;
+  --panel-2: #1b1a29;
+  --line: rgba(242,240,250,0.09);
+  --line-strong: rgba(242,240,250,0.16);
+  --text: #f2f0fa;
+  --text-dim: #9491ac;
+  --text-faint: #65627c;
+
+  --mind: #8b7cff;
+  --mind-dim: rgba(139,124,255,0.16);
+  --mind-glow: rgba(139,124,255,0.55);
+
+  --gold: #f2b84b;
+  --gold-dim: rgba(242,184,75,0.16);
+
+  --warn: #ff5470;
+  --warn-dim: rgba(255,84,112,0.16);
+
+  --ok: #4ade80;
+
+  --radius-lg: 22px;
+  --radius-md: 14px;
+  --radius-sm: 9px;
+
+  --shadow-panel: 0 20px 60px -30px rgba(0,0,0,0.7);
+}
+
+*, *::before, *::after { 
+  box-sizing: border-box; 
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  background:
+    radial-gradient(ellipse 120% 60% at 50% -8%, #201c3a 0%, rgba(32,28,58,0) 60%),
+    radial-gradient(ellipse 90% 50% at 85% 110%, #1a1430 0%, rgba(26,20,48,0) 55%),
+    var(--void);
+  color: var(--text);
+  font-family: 'Space Grotesk', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+h1, h2, h3, .font-display { 
+  font-family: 'Fraunces', ui-serif, Georgia, serif; 
+}
+
+button { 
+  font-family: inherit; 
+}
+
+::selection { 
+  background: var(--mind-dim); 
+  color: var(--text); 
+}
+
+:focus-visible {
+  outline: 2px solid var(--mind);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { 
+    animation-duration: 0.001ms !important; 
+    animation-iteration-count: 1 !important; 
+    transition-duration: 0.001ms !important; 
+  }
+}
