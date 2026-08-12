@@ -268,7 +268,17 @@
 }
 .player-btn:hover { border-color: var(--mind); }
 .player-btn:active { transform: scale(0.96); }
-.player-btn[disabled] { opacity: 0.32; cursor: not-allowed; }
+.player-btn[disabled] { 
+  cursor: not-allowed; 
+  /* Oscurezco el fondo y el borde del botón manualmente en lugar de usar opacity */
+  background: rgba(20, 19, 31, 0.5); 
+  border-color: rgba(242, 240, 250, 0.04);
+}
+
+/* Aplico la opacidad del 32% a todo lo que hay dentro, EXCEPTO a los indicadores */
+.player-btn[disabled] > *:not(.player-discard-indicators) {
+  opacity: 0.32;
+}
 .player-btn-name { font-weight: 700; font-size: clamp(1.05rem, 2.6vh, 1.3rem); line-height: 1.2; text-align: center; }
 .player-btn-count {
   font-family: 'Space Grotesk', sans-serif;
