@@ -1,0 +1,144 @@
+/* File: css/setup.css */
+/* Author: Laura Sanz Lobo */
+
+.setup-title {
+  font-size: clamp(1.5rem, 4.5vh, 2.7rem);
+  font-weight: 600;
+  line-height: 1.15;
+  margin: clamp(4px, 1vh, 8px) 0 0;
+}
+.setup-sub {
+  color: var(--text-dim);
+  font-size: clamp(0.85rem, 2vh, 1rem);
+  margin: 0;
+  max-width: 34ch;
+}
+.player-select {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(8px, 1.4vh, 12px);
+  margin-top: clamp(4px, 1vh, 8px);
+  min-height: 0;
+  overflow-y: auto;
+}
+.player-opt {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  text-align: left;
+  padding: clamp(12px, 2vh, 18px) clamp(14px, 3vw, 20px);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  color: var(--text);
+  cursor: pointer;
+  transition: border-color .15s ease, background .15s ease, transform .1s ease;
+}
+.player-opt:hover { border-color: var(--mind); background: var(--panel-2); }
+.player-opt:active { transform: scale(0.98); }
+.player-opt-num {
+  font-family: 'Fraunces', serif;
+  font-size: 2.1rem;
+  font-weight: 600;
+  color: var(--mind);
+  width: 1.4em;
+  text-align: center;
+  flex-shrink: 0;
+}
+.player-opt-body { display: flex; flex-direction: column; gap: 3px; }
+.player-opt-label { font-size: 1rem; font-weight: 600; }
+.player-opt-meta { font-size: 0.8rem; color: var(--text-dim); }
+
+.name-form {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(8px, 1.4vh, 14px);
+  margin-top: clamp(4px, 1vh, 8px);
+  animation: pop-in .25s ease;
+  min-height: 0;
+  overflow-y: auto;
+}
+.name-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.name-field label {
+  font-size: 0.76rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.name-field input {
+  appearance: none;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: clamp(9px, 1.6vh, 14px) 16px;
+  font-size: clamp(0.9rem, 2vh, 1rem);
+  font-family: inherit;
+  color: var(--text);
+  transition: border-color .15s ease, background .15s ease;
+}
+.name-field input::placeholder { color: var(--text-faint); }
+.name-field input:hover { border-color: var(--line-strong); }
+.name-field input:focus {
+  outline: none;
+  border-color: var(--mind);
+  background: var(--panel-2);
+  box-shadow: 0 0 0 3px var(--mind-dim);
+}
+.name-form-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+.footnote {
+  margin-top: auto;
+  padding-top: clamp(8px, 1.6vh, 18px);
+  color: var(--text-faint);
+  font-size: 0.74rem;
+  line-height: 1.4;
+  border-top: 1px solid var(--line);
+  flex-shrink: 0;
+}
+
+.device-mode-toggle {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+.device-mode-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: 2px;
+}
+.device-mode-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+  padding: clamp(9px, 1.8vh, 13px) 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--text-dim);
+  font-size: 0.86rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color .15s ease, color .15s ease, background .15s ease;
+}
+.device-mode-btn:hover { border-color: var(--line-strong); color: var(--text); }
+.device-mode-btn.is-active {
+  border-color: var(--mind);
+  background: var(--mind-dim);
+  color: var(--text);
+}
+.device-mode-icon { font-size: 1.1rem; flex-shrink: 0; }
