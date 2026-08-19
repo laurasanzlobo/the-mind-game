@@ -186,19 +186,9 @@
 .reward-star { color: var(--gold); }
 .reward-life { color: var(--warn); }
 
-/* INDICADORES DE JUGADOR */
-.player-discard-indicators {
-  position: absolute;
-  bottom: calc(100% + 12px);
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  z-index: 5;
-  pointer-events: none;
+/* INDICADORES DE JUGADOR (base visual de las fichas, no posicionamiento) */
+.table-chip {
+  flex-shrink: 0;
 }
 .table-chip {
   min-width: 44px;
@@ -447,4 +437,35 @@
   flex-direction: column;
   gap: 4px;
   pointer-events: none;
+}
+
+/* INDICADORES - MODO IPAD/TABLET  */
+
+.round-table:not(.layout-mobile-table) .player-discard-indicators-left,
+.round-table:not(.layout-mobile-table) .player-discard-indicators-right {
+  position: absolute;
+  bottom: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 6px;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* Estrella ninja: mitad izquierda del hueco superior, hacia el centro */
+.round-table:not(.layout-mobile-table) .player-discard-indicators-left {
+  right: 50%;
+  margin-right: 4px;
+  margin-bottom: 10px;
+  justify-content: flex-end;
+}
+
+/* Fichas de error: mitad derecha del hueco superior, hacia el centro */
+.round-table:not(.layout-mobile-table) .player-discard-indicators-right {
+  left: 50%;
+  margin-left: 4px;
+  margin-bottom: 10px;
+  max-width: 160px; /* fuerza el salto de línea a partir de ~3 fichas por fila */
+  justify-content: flex-start;
 }
