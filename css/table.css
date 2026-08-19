@@ -511,9 +511,15 @@
 
 .round-table.layout-mobile-table .player-ninja-mobileside .table-chip,
 .round-table.layout-mobile-table .player-errors-mobileside .table-chip {
-  transform: none;
+  transform: rotate(180deg);
 }
 
+.round-table.layout-mobile-table .table-chip {
+  min-width: 34px;
+  height: 34px;
+  padding: 3px 6px;
+  font-size: 1.05rem;
+}
 .round-table.layout-mobile-table .player-ninja-mobileside {
   position: absolute;
   bottom: 100%;
@@ -531,7 +537,7 @@
   display: flex;
   flex-flow: row wrap;
   gap: 6px;
-  max-width: 130px;
+  max-width: 80px; /* ~2 fichas de 34px + gap; la 3ª salta de línea */
   pointer-events: none;
   z-index: 5;
 }
