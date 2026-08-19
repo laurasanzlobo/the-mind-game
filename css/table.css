@@ -12,11 +12,16 @@
 }
 .qr-grid.qr-grid-4 { grid-template-columns: repeat(2, 1fr); }
 
-/* --- 2+1: aplica siempre a 3 jugadores, sea cual sea el modo de dispositivo --- */
-.qr-grid.qr-grid-3 {
+/* --- 3 jugadores en Ordenador y Tablet: fila horizontal de 3 --- */
+.qr-grid.qr-grid-3:not(.layout-mobile-deal) {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+/* --- 3 jugadores en Móvil: cuadrícula 2+1 centrada (evita desbordamiento) --- */
+.qr-grid.qr-grid-3.layout-mobile-deal {
   grid-template-columns: repeat(2, 1fr);
 }
-.qr-grid.qr-grid-3 .qr-card:nth-child(3) {
+.qr-grid.qr-grid-3.layout-mobile-deal .qr-card:nth-child(3) {
   grid-column: 1 / -1;
   justify-self: center;
   width: 100%;
@@ -24,6 +29,7 @@
 }
 
 /* ===================== MODO ORDENADOR (standard): QR ampliados ===================== */
+/* Base: aplica a 2 y 3 jugadores */
 .qr-grid:not(.layout-mobile-deal):not(.layout-tablet) .qr-box img,
 .qr-grid:not(.layout-mobile-deal):not(.layout-tablet) .qr-box canvas {
   width: clamp(150px, 26vh, 240px) !important;
@@ -31,6 +37,26 @@
 }
 .qr-grid:not(.layout-mobile-deal):not(.layout-tablet) .qr-card {
   padding: clamp(16px, 2.6vh, 26px);
+}
+
+/* 2 jugadores: aprovechar el ancho horizontal completo del monitor */
+.qr-grid:not(.layout-mobile-deal):not(.layout-tablet):not(.qr-grid-3):not(.qr-grid-4) .qr-box img,
+.qr-grid:not(.layout-mobile-deal):not(.layout-tablet):not(.qr-grid-3):not(.qr-grid-4) .qr-box canvas {
+  width: clamp(210px, 34vh, 340px) !important;
+  height: clamp(210px, 34vh, 340px) !important;
+}
+.qr-grid:not(.layout-mobile-deal):not(.layout-tablet):not(.qr-grid-3):not(.qr-grid-4) .qr-card {
+  padding: clamp(26px, 4.2vh, 42px);
+}
+
+/* 4 jugadores: ajuste mínimo para eliminar el scroll residual en la 2x2 */
+.qr-grid.qr-grid-4:not(.layout-mobile-deal):not(.layout-tablet) .qr-box img,
+.qr-grid.qr-grid-4:not(.layout-mobile-deal):not(.layout-tablet) .qr-box canvas {
+  width: clamp(140px, 22vh, 208px) !important;
+  height: clamp(140px, 22vh, 208px) !important;
+}
+.qr-grid.qr-grid-4:not(.layout-mobile-deal):not(.layout-tablet) .qr-card {
+  padding: clamp(12px, 2vh, 18px);
 }
 
 .qr-card {
@@ -69,8 +95,7 @@
 .qr-card-count { font-size: 0.76rem; color: var(--text-dim); }
 
 /* ===================== MODO IPAD/TABLET: ESCALADO DE QR ===================== */
-/* Aplica a 3 y 4 jugadores por igual: aprovechan el espacio extra de la tablet
-   con lienzo y tarjeta bien grandes. */
+/* Base: aplica a 3 jugadores (fila de 3) */
 .qr-grid.layout-tablet .qr-box img,
 .qr-grid.layout-tablet .qr-box canvas {
   width: clamp(160px, 28vh, 230px) !important;
@@ -89,6 +114,35 @@
 }
 .qr-grid.layout-tablet:not(.qr-grid-3):not(.qr-grid-4) .qr-card {
   padding: clamp(26px, 4.5vh, 44px);
+}
+
+/* 4 jugadores en tablet: reducción más notable en la 2x2 para eliminar el scroll */
+.qr-grid.layout-tablet.qr-grid-4 .qr-box img,
+.qr-grid.layout-tablet.qr-grid-4 .qr-box canvas {
+  width: clamp(118px, 19vh, 168px) !important;
+  height: clamp(118px, 19vh, 168px) !important;
+}
+.qr-grid.layout-tablet.qr-grid-4 .qr-card {
+  padding: clamp(9px, 1.6vh, 14px);
+}
+
+/* ===================== MODO MÓVIL: contención estricta para 3 y 4 jugadores ===================== */
+/* 2 jugadores ya queda estático con el tamaño base; solo ajustamos 3 y 4 */
+.qr-grid.layout-mobile-deal.qr-grid-3,
+.qr-grid.layout-mobile-deal.qr-grid-4 {
+  gap: clamp(6px, 1.1vh, 10px);
+}
+.qr-grid.layout-mobile-deal.qr-grid-3 .qr-box img,
+.qr-grid.layout-mobile-deal.qr-grid-3 .qr-box canvas,
+.qr-grid.layout-mobile-deal.qr-grid-4 .qr-box img,
+.qr-grid.layout-mobile-deal.qr-grid-4 .qr-box canvas {
+  width: clamp(76px, 14.5vh, 126px) !important;
+  height: clamp(76px, 14.5vh, 126px) !important;
+}
+.qr-grid.layout-mobile-deal.qr-grid-3 .qr-card,
+.qr-grid.layout-mobile-deal.qr-grid-4 .qr-card {
+  padding: clamp(8px, 1.3vh, 12px);
+  gap: clamp(4px, 0.9vh, 7px);
 }
 
 /* ===================== PANTALLA: MESA DE JUEGO ===================== */
