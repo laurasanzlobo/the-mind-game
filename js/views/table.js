@@ -119,15 +119,15 @@ const MOBILE_POSITIONS = {
     'top:88%; left:50%; transform:translate(-50%,-50%) rotate(0deg);',
   ],
   3: [
-    'top:17%; left:12%; transform:translate(-50%,-50%) rotate(-90deg);', // Jugador 1 (arriba-izq)
-    'top:17%; left:88%; transform:translate(-50%,-50%) rotate(90deg);',  // Jugador 2 (arriba-dcha)
-    'top:83%; left:88%; transform:translate(-50%,-50%) rotate(90deg);', // Jugador 3 (abajo-dcha)
+    'top:17%; left:12%; transform:translate(-50%,-50%) rotate(90deg);', // Jugador 1 (arriba-izq)
+    'top:17%; left:88%; transform:translate(-50%,-50%) rotate(-90deg);', // Jugador 2 (arriba-dcha)
+    'top:83%; left:88%; transform:translate(-50%,-50%) rotate(-90deg);', // Jugador 3 (abajo-dcha)
   ],
   4: [
-    'top:17%; left:12%; transform:translate(-50%,-50%) rotate(-90deg);', // Jugador 1 (arriba-izq)
-    'top:17%; left:88%; transform:translate(-50%,-50%) rotate(90deg);',  // Jugador 2 (arriba-dcha)
-    'top:83%; left:88%; transform:translate(-50%,-50%) rotate(90deg);', // Jugador 3 (abajo-dcha)
-    'top:83%; left:12%; transform:translate(-50%,-50%) rotate(-90deg);', // Jugador 4 (abajo-izq)
+    'top:17%; left:12%; transform:translate(-50%,-50%) rotate(90deg);', // Jugador 1 (arriba-izq)
+    'top:17%; left:88%; transform:translate(-50%,-50%) rotate(-90deg);', // Jugador 2 (arriba-dcha)
+    'top:83%; left:88%; transform:translate(-50%,-50%) rotate(-90deg);', // Jugador 3 (abajo-dcha)
+    'top:83%; left:12%; transform:translate(-50%,-50%) rotate(90deg);', // Jugador 4 (abajo-izq)
   ],
 };
 
@@ -137,8 +137,8 @@ const MOBILE_LATERAL_SIDES = {
 };
 
 const MOBILE_ERROR_ANCHOR = {
-  3: ['right', 'left', 'right'],
-  4: ['right', 'left', 'right', 'left'],
+  3: ['left', 'right', 'left'],
+  4: ['left', 'right', 'left', 'right'],
 };
 
 function renderMobileLateralIndicators(pIndex) {

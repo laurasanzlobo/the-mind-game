@@ -511,15 +511,15 @@
 
 .round-table.layout-mobile-table .player-ninja-mobileside .table-chip,
 .round-table.layout-mobile-table .player-errors-mobileside .table-chip {
-  transform: rotate(180deg);
+  transform: none;
 }
 
 .round-table.layout-mobile-table .player-ninja-mobileside {
   position: absolute;
-  top: 100%;
+  bottom: 100%;
   left: 50%;
   transform: translateX(-50%);
-  margin-top: 10px;
+  margin-bottom: 10px;
   pointer-events: none;
   z-index: 5;
 }
