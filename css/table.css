@@ -509,13 +509,9 @@
    MÓVIL: 3 y 4 JUGADORES 
    =================================================================== */
 
-.round-table.layout-mobile-table .player-ninja-mobileside.side-left .table-chip,
-.round-table.layout-mobile-table .player-errors-mobileside.side-left .table-chip {
-  transform: rotate(90deg);
-}
-.round-table.layout-mobile-table .player-ninja-mobileside.side-right .table-chip,
-.round-table.layout-mobile-table .player-errors-mobileside.side-right .table-chip {
-  transform: rotate(-90deg);
+.round-table.layout-mobile-table .player-ninja-mobileside .table-chip,
+.round-table.layout-mobile-table .player-errors-mobileside .table-chip {
+  transform: rotate(180deg);
 }
 
 .round-table.layout-mobile-table .player-ninja-mobileside {
@@ -539,13 +535,13 @@
   pointer-events: none;
   z-index: 5;
 }
-.round-table.layout-mobile-table .player-errors-mobileside.side-left {
-  left: 100%;
-  margin-left: 10px;
-  justify-content: flex-start;
-}
-.round-table.layout-mobile-table .player-errors-mobileside.side-right {
+.round-table.layout-mobile-table .player-errors-mobileside.anchor-right {
   right: 100%;
   margin-right: 10px;
   justify-content: flex-end;
+}
+.round-table.layout-mobile-table .player-errors-mobileside.anchor-left {
+  left: 100%;
+  margin-left: 10px;
+  justify-content: flex-start;
 }

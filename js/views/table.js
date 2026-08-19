@@ -119,27 +119,31 @@ const MOBILE_POSITIONS = {
     'top:88%; left:50%; transform:translate(-50%,-50%) rotate(0deg);',
   ],
   3: [
-    'top:25%; left:12%; transform:translate(-50%,-50%) rotate(-90deg);',
-    'top:25%; left:88%; transform:translate(-50%,-50%) rotate(90deg);',
-    'top:75%; left:88%; transform:translate(-50%,-50%) rotate(90deg);',
+    'top:17%; left:12%; transform:translate(-50%,-50%) rotate(-90deg);', // Jugador 1 (arriba-izq)
+    'top:17%; left:88%; transform:translate(-50%,-50%) rotate(90deg);',  // Jugador 2 (arriba-dcha)
+    'top:83%; left:88%; transform:translate(-50%,-50%) rotate(90deg);', // Jugador 3 (abajo-dcha)
   ],
   4: [
-    'top:25%; left:12%; transform:translate(-50%,-50%) rotate(-90deg);',
-    'top:25%; left:88%; transform:translate(-50%,-50%) rotate(90deg);',
-    'top:75%; left:88%; transform:translate(-50%,-50%) rotate(90deg);',
-    'top:75%; left:12%; transform:translate(-50%,-50%) rotate(-90deg);',
+    'top:17%; left:12%; transform:translate(-50%,-50%) rotate(-90deg);', // Jugador 1 (arriba-izq)
+    'top:17%; left:88%; transform:translate(-50%,-50%) rotate(90deg);',  // Jugador 2 (arriba-dcha)
+    'top:83%; left:88%; transform:translate(-50%,-50%) rotate(90deg);', // Jugador 3 (abajo-dcha)
+    'top:83%; left:12%; transform:translate(-50%,-50%) rotate(-90deg);', // Jugador 4 (abajo-izq)
   ],
 };
 
-// Lateral de la pantalla que ocupa cada jugador en la disposición
-// móvil de 3/4 (necesario para saber a qué lado va la fila de fallos)
 const MOBILE_LATERAL_SIDES = {
   3: ['left', 'right', 'right'],
   4: ['left', 'right', 'right', 'left'],
 };
 
+const MOBILE_ERROR_ANCHOR = {
+  3: ['right', 'left', 'right'],
+  4: ['right', 'left', 'right', 'left'],
+};
+
 function renderMobileLateralIndicators(pIndex) {
   const side = (MOBILE_LATERAL_SIDES[state.numPlayers] || [])[pIndex] || 'left';
+  const errorAnchor = (MOBILE_ERROR_ANCHOR[state.numPlayers] || [])[pIndex] || 'right';
 
   const ninjaCard = state.ninjaDiscards && state.ninjaDiscards[pIndex];
   const ninjaHtml = (ninjaCard !== null && ninjaCard !== undefined)
@@ -154,7 +158,7 @@ function renderMobileLateralIndicators(pIndex) {
     });
   }
   const errorHtml = errorChips
-    ? `<span class="player-errors-mobileside side-${side}">${errorChips}</span>`
+    ? `<span class="player-errors-mobileside anchor-${errorAnchor}">${errorChips}</span>`
     : '';
 
   return `${ninjaHtml}${errorHtml}`;
