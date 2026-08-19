@@ -59,16 +59,16 @@ function renderStandardIndicators(pIndex) {
   let chips = '';
   const ninjaCard = state.ninjaDiscards && state.ninjaDiscards[pIndex];
   if (ninjaCard !== null && ninjaCard !== undefined) {
-    chips += `${ninjaCard}`;
+    chips += `<span class="table-chip ninja">${ninjaCard}</span>`;
   }
   const errCards = state.errorDiscards && state.errorDiscards[pIndex];
   if (errCards && errCards.length > 0) {
     errCards.forEach(c => {
-      chips += `${c}`;
+      chips += `<span class="table-chip error">${c}</span>`;
     });
   }
   if (!chips) return '';
-  return `${chips}`;
+  return `<span class="player-indicators-standard">${chips}</span>`;
 }
 
 function renderPlayerIndicators(pIndex) {
