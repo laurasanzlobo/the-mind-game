@@ -55,6 +55,22 @@ function renderTabletIndicators(pIndex) {
   return `${ninjaHtml}${errorWrap}`;
 }
 
+function renderStandardIndicators(pIndex) {
+  let chips = '';
+  const ninjaCard = state.ninjaDiscards && state.ninjaDiscards[pIndex];
+  if (ninjaCard !== null && ninjaCard !== undefined) {
+    chips += `${ninjaCard}`;
+  }
+  const errCards = state.errorDiscards && state.errorDiscards[pIndex];
+  if (errCards && errCards.length > 0) {
+    errCards.forEach(c => {
+      chips += `${c}`;
+    });
+  }
+  if (!chips) return '';
+  return `${chips}`;
+}
+
 function renderPlayerIndicators(pIndex) {
   if (state.layoutMode === 'tablet') {
     return renderTabletIndicators(pIndex);
@@ -62,7 +78,11 @@ function renderPlayerIndicators(pIndex) {
   if (state.layoutMode === 'mobile' && (state.numPlayers === 3 || state.numPlayers === 4)) {
     return renderMobileLateralIndicators(pIndex);
   }
+  if (state.layoutMode === 'standard') {
+    return renderStandardIndicators(pIndex);
+  }
 
+  // Caso restante: Móvil con 2 jugadores (mesa circular, chips a los lados)
   let ninjaChip = '';
   const ninjaCard = state.ninjaDiscards && state.ninjaDiscards[pIndex];
   if (ninjaCard !== null && ninjaCard !== undefined) {
