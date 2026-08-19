@@ -59,6 +59,9 @@ function renderPlayerIndicators(pIndex) {
   if (state.layoutMode === 'tablet') {
     return renderTabletIndicators(pIndex);
   }
+  if (state.layoutMode === 'mobile' && (state.numPlayers === 3 || state.numPlayers === 4)) {
+    return renderMobileLateralIndicators(pIndex);
+  }
 
   let ninjaChip = '';
   const ninjaCard = state.ninjaDiscards && state.ninjaDiscards[pIndex];
@@ -92,7 +95,6 @@ function renderLevelUpOverlay() {
   return `<div class="levelup-bar"><button class="btn btn-primary btn-compact" onclick="window.continueGame()">${btnLabel}</button></div>`;
 }
 
-// Coordenadas para el iPad (apaisado)
 const TABLET_POSITIONS = {
   2: [
     'top:50%; left:12%; transform:translate(-50%,-50%) rotate(90deg);',
@@ -111,24 +113,52 @@ const TABLET_POSITIONS = {
   ],
 };
 
-// He calculado las nuevas coordenadas verticales para el móvil
 const MOBILE_POSITIONS = {
   2: [
     'top:12%; left:50%; transform:translate(-50%,-50%) rotate(180deg);',
     'top:88%; left:50%; transform:translate(-50%,-50%) rotate(0deg);',
   ],
   3: [
-    'top:12%; left:50%; transform:translate(-50%,-50%) rotate(180deg);',
-    'top:88%; left:22%; transform:translate(-50%,-50%) rotate(0deg);',
-    'top:88%; left:78%; transform:translate(-50%,-50%) rotate(0deg);',
+    'top:25%; left:12%; transform:translate(-50%,-50%) rotate(-90deg);',
+    'top:25%; left:88%; transform:translate(-50%,-50%) rotate(90deg);',
+    'top:75%; left:88%; transform:translate(-50%,-50%) rotate(90deg);',
   ],
   4: [
-    'top:12%; left:25%; transform:translate(-50%,-50%) rotate(180deg);',
-    'top:12%; left:75%; transform:translate(-50%,-50%) rotate(180deg);',
-    'top:88%; left:75%; transform:translate(-50%,-50%) rotate(0deg);',
-    'top:88%; left:25%; transform:translate(-50%,-50%) rotate(0deg);',
+    'top:25%; left:12%; transform:translate(-50%,-50%) rotate(-90deg);',
+    'top:25%; left:88%; transform:translate(-50%,-50%) rotate(90deg);',
+    'top:75%; left:88%; transform:translate(-50%,-50%) rotate(90deg);',
+    'top:75%; left:12%; transform:translate(-50%,-50%) rotate(-90deg);',
   ],
 };
+
+// Lateral de la pantalla que ocupa cada jugador en la disposición
+// móvil de 3/4 (necesario para saber a qué lado va la fila de fallos)
+const MOBILE_LATERAL_SIDES = {
+  3: ['left', 'right', 'right'],
+  4: ['left', 'right', 'right', 'left'],
+};
+
+function renderMobileLateralIndicators(pIndex) {
+  const side = (MOBILE_LATERAL_SIDES[state.numPlayers] || [])[pIndex] || 'left';
+
+  const ninjaCard = state.ninjaDiscards && state.ninjaDiscards[pIndex];
+  const ninjaHtml = (ninjaCard !== null && ninjaCard !== undefined)
+    ? `<span class="player-ninja-mobileside side-${side}"><span class="table-chip ninja">${ninjaCard}</span></span>`
+    : '';
+
+  const errCards = state.errorDiscards && state.errorDiscards[pIndex];
+  let errorChips = '';
+  if (errCards && errCards.length > 0) {
+    errCards.forEach(c => {
+      errorChips += `<span class="table-chip error">${c}</span>`;
+    });
+  }
+  const errorHtml = errorChips
+    ? `<span class="player-errors-mobileside side-${side}">${errorChips}</span>`
+    : '';
+
+  return `${ninjaHtml}${errorHtml}`;
+}
 
 export function renderTable() {
   let livesDots = '';

@@ -266,7 +266,7 @@
 }
 
 /* Aplico la opacidad del 32% a todo lo que hay dentro, EXCEPTO a los indicadores */
-.player-btn[disabled] > *:not(.player-discard-indicators):not(.player-ninja-tablet):not(.player-errors-tablet) {
+.player-btn[disabled] > *:not(.player-discard-indicators):not(.player-ninja-tablet):not(.player-errors-tablet):not(.player-ninja-mobileside):not(.player-errors-mobileside) {
   opacity: 0.32;
 }
 .player-btn-name { font-weight: 700; font-size: clamp(1.05rem, 2.6vh, 1.3rem); line-height: 1.2; text-align: center; }
@@ -483,4 +483,69 @@
   left: 100%;
   transform: translateY(-50%);
   margin-left: 12px;
+}
+
+/* ===================================================================
+   MÓVIL: 2 JUGADORES 
+   =================================================================== */
+
+.round-table.layout-mobile-table:has(.player-btn:nth-child(3):last-child) .table-chip {
+  transform: rotate(180deg);
+}
+
+.round-table.layout-mobile-table:has(.player-btn:nth-child(3):last-child) .player-discard-indicators-right {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 6px;
+  max-width: 150px; /* ~3 fichas de 44px + gaps por fila */
+  justify-content: flex-start;
+}
+
+.round-table.layout-mobile-table .pile-number.is-empty {
+  font-size: clamp(0.85rem, 2.6vh, 1.05rem);
+}
+
+/* ===================================================================
+   MÓVIL: 3 y 4 JUGADORES 
+   =================================================================== */
+
+.round-table.layout-mobile-table .player-ninja-mobileside.side-left .table-chip,
+.round-table.layout-mobile-table .player-errors-mobileside.side-left .table-chip {
+  transform: rotate(90deg);
+}
+.round-table.layout-mobile-table .player-ninja-mobileside.side-right .table-chip,
+.round-table.layout-mobile-table .player-errors-mobileside.side-right .table-chip {
+  transform: rotate(-90deg);
+}
+
+.round-table.layout-mobile-table .player-ninja-mobileside {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 10px;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.round-table.layout-mobile-table .player-errors-mobileside {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-flow: row wrap;
+  gap: 6px;
+  max-width: 130px;
+  pointer-events: none;
+  z-index: 5;
+}
+.round-table.layout-mobile-table .player-errors-mobileside.side-left {
+  left: 100%;
+  margin-left: 10px;
+  justify-content: flex-start;
+}
+.round-table.layout-mobile-table .player-errors-mobileside.side-right {
+  right: 100%;
+  margin-right: 10px;
+  justify-content: flex-end;
 }
