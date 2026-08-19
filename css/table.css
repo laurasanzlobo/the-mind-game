@@ -490,6 +490,10 @@
    =================================================================== */
 
 .round-table.layout-mobile-table:has(.player-btn:nth-child(3):last-child) .table-chip {
+  min-width: 44px;
+  height: 44px;
+  padding: 4px 8px;
+  font-size: 1.35rem;
   transform: rotate(180deg);
 }
 
