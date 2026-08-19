@@ -130,19 +130,32 @@
 /* 2 jugadores ya queda estático con el tamaño base; solo ajustamos 3 y 4 */
 .qr-grid.layout-mobile-deal.qr-grid-3,
 .qr-grid.layout-mobile-deal.qr-grid-4 {
-  gap: clamp(6px, 1.1vh, 10px);
+  gap: clamp(5px, 0.9vh, 8px);
 }
 .qr-grid.layout-mobile-deal.qr-grid-3 .qr-box img,
 .qr-grid.layout-mobile-deal.qr-grid-3 .qr-box canvas,
 .qr-grid.layout-mobile-deal.qr-grid-4 .qr-box img,
 .qr-grid.layout-mobile-deal.qr-grid-4 .qr-box canvas {
-  width: clamp(76px, 14.5vh, 126px) !important;
-  height: clamp(76px, 14.5vh, 126px) !important;
+  width: clamp(68px, 13vh, 112px) !important;
+  height: clamp(68px, 13vh, 112px) !important;
+}
+.qr-grid.layout-mobile-deal.qr-grid-3 .qr-box,
+.qr-grid.layout-mobile-deal.qr-grid-4 .qr-box {
+  padding: 6px;
 }
 .qr-grid.layout-mobile-deal.qr-grid-3 .qr-card,
 .qr-grid.layout-mobile-deal.qr-grid-4 .qr-card {
-  padding: clamp(8px, 1.3vh, 12px);
-  gap: clamp(4px, 0.9vh, 7px);
+  padding: clamp(6px, 1.1vh, 10px);
+  gap: clamp(3px, 0.7vh, 6px);
+}
+.qr-grid.layout-mobile-deal.qr-grid-3 .qr-card-badge,
+.qr-grid.layout-mobile-deal.qr-grid-4 .qr-card-badge {
+  font-size: 0.78rem;
+  padding: 5px 10px;
+}
+.qr-grid.layout-mobile-deal.qr-grid-3 .qr-card-count,
+.qr-grid.layout-mobile-deal.qr-grid-4 .qr-card-count {
+  font-size: 0.7rem;
 }
 
 /* ===================== PANTALLA: MESA DE JUEGO ===================== */
