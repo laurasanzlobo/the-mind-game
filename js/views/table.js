@@ -19,7 +19,47 @@ function rewardLabel(level) {
   return null;
 }
 
+const TABLET_NINJA_SIDES = {
+  3: ['left', 'right', 'right'],
+  4: ['left', 'right', 'left', 'right'],
+};
+
+function renderTabletIndicators(pIndex) {
+  const ninjaCard = state.ninjaDiscards && state.ninjaDiscards[pIndex];
+  const errCards = state.errorDiscards && state.errorDiscards[pIndex];
+
+  let ninjaHtml = '';
+  if (ninjaCard !== null && ninjaCard !== undefined) {
+    if (state.numPlayers === 2) {
+      // Caso especial: un chip a cada lado, con orientación distinta
+      ninjaHtml = `
+        <span class="player-ninja-tablet side-left"><span class="table-chip ninja face-self">${ninjaCard}</span></span>
+        <span class="player-ninja-tablet side-right"><span class="table-chip ninja face-rival">${ninjaCard}</span></span>
+      `;
+    } else {
+      const side = (TABLET_NINJA_SIDES[state.numPlayers] || [])[pIndex] || 'left';
+      ninjaHtml = `
+        <span class="player-ninja-tablet side-${side}"><span class="table-chip ninja face-rival">${ninjaCard}</span></span>
+      `;
+    }
+  }
+
+  let errorHtml = '';
+  if (errCards && errCards.length > 0) {
+    errCards.forEach(c => {
+      errorHtml += `<span class="table-chip error">${c}</span>`;
+    });
+  }
+  const errorWrap = errorHtml ? `<span class="player-errors-tablet">${errorHtml}</span>` : '';
+
+  return `${ninjaHtml}${errorWrap}`;
+}
+
 function renderPlayerIndicators(pIndex) {
+  if (state.layoutMode === 'tablet') {
+    return renderTabletIndicators(pIndex);
+  }
+
   let ninjaChip = '';
   const ninjaCard = state.ninjaDiscards && state.ninjaDiscards[pIndex];
   if (ninjaCard !== null && ninjaCard !== undefined) {

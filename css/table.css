@@ -266,7 +266,7 @@
 }
 
 /* Aplico la opacidad del 32% a todo lo que hay dentro, EXCEPTO a los indicadores */
-.player-btn[disabled] > *:not(.player-discard-indicators) {
+.player-btn[disabled] > *:not(.player-discard-indicators):not(.player-ninja-tablet):not(.player-errors-tablet) {
   opacity: 0.32;
 }
 .player-btn-name { font-weight: 700; font-size: clamp(1.05rem, 2.6vh, 1.3rem); line-height: 1.2; text-align: center; }
@@ -439,33 +439,48 @@
   pointer-events: none;
 }
 
-/* INDICADORES - MODO IPAD/TABLET  */
+/* INDICADORES - MODO IPAD/TABLET */
 
-.round-table:not(.layout-mobile-table) .player-discard-indicators-left,
-.round-table:not(.layout-mobile-table) .player-discard-indicators-right {
+.round-table:not(.layout-mobile-table) .table-chip.error,
+.round-table:not(.layout-mobile-table) .table-chip.ninja.face-rival {
+  transform: rotate(180deg);
+}
+.round-table:not(.layout-mobile-table) .table-chip.ninja.face-self {
+  transform: none;
+}
+
+/* --- FAILS --- */
+.round-table:not(.layout-mobile-table) .player-errors-tablet {
   position: absolute;
   bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 12px;
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   align-content: flex-start;
   gap: 6px;
+  width: max-content;
+  max-width: 168px; /* fuerza salto de línea a partir de ~3 fichas por fila */
   pointer-events: none;
   z-index: 5;
 }
 
-/* Estrella ninja: mitad izquierda del hueco superior, hacia el centro */
-.round-table:not(.layout-mobile-table) .player-discard-indicators-left {
-  right: 50%;
-  margin-right: 4px;
-  margin-bottom: 10px;
-  justify-content: flex-end;
+/* --- NINJA--- */
+.round-table:not(.layout-mobile-table) .player-ninja-tablet {
+  position: absolute;
+  top: 50%;
+  pointer-events: none;
+  z-index: 5;
 }
-
-/* Fichas de error: mitad derecha del hueco superior, hacia el centro */
-.round-table:not(.layout-mobile-table) .player-discard-indicators-right {
-  left: 50%;
-  margin-left: 4px;
-  margin-bottom: 10px;
-  max-width: 160px; /* fuerza el salto de línea a partir de ~3 fichas por fila */
-  justify-content: flex-start;
+.round-table:not(.layout-mobile-table) .player-ninja-tablet.side-left {
+  right: 100%;
+  transform: translateY(-50%);
+  margin-right: 12px;
+}
+.round-table:not(.layout-mobile-table) .player-ninja-tablet.side-right {
+  left: 100%;
+  transform: translateY(-50%);
+  margin-left: 12px;
 }
