@@ -11,10 +11,34 @@
   align-content: center;
 }
 .qr-grid.qr-grid-4 { grid-template-columns: repeat(2, 1fr); }
-.qr-grid.qr-grid-3 { grid-template-columns: repeat(3, 1fr); }
-.qr-grid.qr-grid-3 .qr-box img, .qr-grid.qr-grid-3 .qr-box canvas { width: clamp(72px, 16vh, 110px) !important; height: clamp(72px, 16vh, 110px) !important; }
+
+/* --- Modo Ordenador (standard): sin cambios respecto al comportamiento original --- */
+.qr-grid.qr-grid-3:not(.layout-mobile-deal):not(.layout-tablet) {
+  grid-template-columns: repeat(3, 1fr);
+}
+.qr-grid.qr-grid-3:not(.layout-mobile-deal):not(.layout-tablet) .qr-box img,
+.qr-grid.qr-grid-3:not(.layout-mobile-deal):not(.layout-tablet) .qr-box canvas {
+  width: clamp(72px, 16vh, 110px) !important;
+  height: clamp(72px, 16vh, 110px) !important;
+}
 @media (max-width: 420px) {
-  .qr-grid.qr-grid-3 { grid-template-columns: 1fr; }
+  .qr-grid.qr-grid-3:not(.layout-mobile-deal):not(.layout-tablet) {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --- Modo Móvil y Tablet: 3 jugadores en cuadrícula 2+1 (igual que 4 jugadores),
+   evitando el scroll de la fila larga / columna única --- */
+.qr-grid.qr-grid-3.layout-mobile-deal,
+.qr-grid.qr-grid-3.layout-tablet {
+  grid-template-columns: repeat(2, 1fr);
+}
+.qr-grid.qr-grid-3.layout-mobile-deal .qr-card:nth-child(3),
+.qr-grid.qr-grid-3.layout-tablet .qr-card:nth-child(3) {
+  grid-column: 1 / -1;
+  justify-self: center;
+  width: 100%;
+  max-width: min(50%, 260px);
 }
 
 .qr-card {
@@ -51,6 +75,29 @@
 }
 .qr-box img, .qr-box canvas { display: block; width: clamp(90px, 18vh, 150px) !important; height: clamp(90px, 18vh, 150px) !important; }
 .qr-card-count { font-size: 0.76rem; color: var(--text-dim); }
+
+/* ===================== MODO IPAD/TABLET: ESCALADO DE QR ===================== */
+/* Aplica a 3 y 4 jugadores por igual: aprovechan el espacio extra de la tablet
+   con el mismo tamaño "cómodo" de lienzo y tarjeta. */
+.qr-grid.layout-tablet .qr-box img,
+.qr-grid.layout-tablet .qr-box canvas {
+  width: clamp(120px, 22vh, 190px) !important;
+  height: clamp(120px, 22vh, 190px) !important;
+}
+.qr-grid.layout-tablet .qr-card {
+  padding: clamp(14px, 2.4vh, 22px);
+}
+
+/* 2 jugadores en tablet: lienzo aún mayor, aprovechando que solo hay
+   dos tarjetas para ocupar todo el ancho disponible. */
+.qr-grid.layout-tablet:not(.qr-grid-3):not(.qr-grid-4) .qr-box img,
+.qr-grid.layout-tablet:not(.qr-grid-3):not(.qr-grid-4) .qr-box canvas {
+  width: clamp(160px, 30vh, 260px) !important;
+  height: clamp(160px, 30vh, 260px) !important;
+}
+.qr-grid.layout-tablet:not(.qr-grid-3):not(.qr-grid-4) .qr-card {
+  padding: clamp(24px, 4vh, 40px);
+}
 
 /* ===================== PANTALLA: MESA DE JUEGO ===================== */
 .stat-row {

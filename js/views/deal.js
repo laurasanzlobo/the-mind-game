@@ -28,6 +28,9 @@ export function renderDeal(renderCallback) {
   }
 
   const gridClass = (state.numPlayers === 4) ? ' qr-grid-4' : (state.numPlayers === 3) ? ' qr-grid-3' : '';
+  const layoutClass = state.layoutMode === 'tablet'
+    ? ' layout-tablet'
+    : (state.layoutMode === 'mobile' ? ' layout-mobile-deal' : '');
 
   window.goToTable = () => {
     state.screen = 'table';
@@ -44,8 +47,8 @@ export function renderDeal(renderCallback) {
         <h2>Nivel ${level} de ${state.maxLevels}</h2>
         <p>Cada jugador escanea su propio código y consulta su mano en el visor individual.</p>
       </div>
-      <div class="qr-grid${gridClass}">${cards}</div>
-      <button class="btn btn-primary btn-block" onclick="goToTable()">Ir a la mesa de juego</button>
+      <div class="qr-grid${gridClass}${layoutClass}">${cards}</div>
+      <button class="btn btn-primary btn-block" onclick="window.goToTable()">Ir a la mesa de juego</button>
     </div>`;
 }
 
