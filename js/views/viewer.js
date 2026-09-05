@@ -1,7 +1,8 @@
 // File: js/views/viewer.js
 // Author: Laura Sanz Lobo
 
-import { parseHash } from '../qr.js';
+import { parseHash, parseRoomParams } from '../qr.js';
+import { subscribeRoom } from '../services/sync.js';
 
 function escapeHtml(str) {
   return String(str)
@@ -24,7 +25,10 @@ function updateViewerHighlight() {
   });
 }
 
-function renderViewer(info) {
+// ==========================================
+// MODO OFFLINE (fallback manual, comportamiento original)
+// ==========================================
+function renderOfflineViewer(info) {
   const app = document.getElementById('app');
 
   if (!info || !info.cards || info.cards.length === 0) {
@@ -54,19 +58,103 @@ function renderViewer(info) {
   updateViewerHighlight();
 }
 
-// Expongo esta función para el onClick de las cartas
 window.toggleViewerCard = (el) => {
   el.classList.toggle('is-played');
   updateViewerHighlight();
 };
 
+// ==========================================
+// MODO ONLINE (sincronizado con Firebase)
+// ==========================================
+let lastRenderedActionTs = null;
+
+function renderOnlineViewer(roomInfo, roomData) {
+  const app = document.getElementById('app');
+
+  if (!roomData) {
+    app.innerHTML = `
+      <div class="screen viewer-screen">
+        <span class="viewer-eyebrow">The Mind</span>
+        <h1 class="viewer-title">Sala no encontrada</h1>
+        <p class="viewer-hint">Puede que la partida haya terminado o que el código sea incorrecto. Pide un nuevo QR desde el móvil central.</p>
+      </div>`;
+    return;
+  }
+
+  if (roomData.status === 'gameover' || roomData.status === 'victory') {
+    const isVictory = roomData.status === 'victory';
+    app.innerHTML = `
+      <div class="screen viewer-screen">
+        <span class="viewer-eyebrow">The Mind</span>
+        <h1 class="viewer-title">${isVictory ? '¡Sincronía perfecta!' : 'Sin vidas :('}</h1>
+        <p class="viewer-hint">${isVictory ? 'Habéis completado todos los niveles.' : `Habéis llegado hasta el nivel ${roomData.currentLevel}.`} Consulta la mesa central para más detalles.</p>
+      </div>`;
+    return;
+  }
+
+  const playerData = roomData.players ? roomData.players[roomInfo.player] : null;
+  if (!playerData) {
+    app.innerHTML = `
+      <div class="screen viewer-screen">
+        <span class="viewer-eyebrow">The Mind</span>
+        <h1 class="viewer-title">Esperando reparto…</h1>
+        <p class="viewer-hint">La mesa central todavía no ha repartido las cartas de este nivel.</p>
+      </div>`;
+    return;
+  }
+
+  const hand = playerData.hand || [];
+  const playedCount = playerData.playedCount || 0;
+
+  const cardsHtml = hand.map((c, i) => `
+    <div class="viewer-card${i < playedCount ? ' is-played' : ''}" data-idx="${i}" style="animation-delay:${i * 0.05}s">${c}</div>
+  `).join('');
+
+  const title = (roomInfo.name && roomInfo.name.trim())
+    ? escapeHtml(roomInfo.name.trim())
+    : (roomData.playerNames && roomData.playerNames[roomInfo.player]) || `Jugador ${roomInfo.player + 1}`;
+
+  app.innerHTML = `
+    <div class="screen viewer-screen">
+      <span class="viewer-eyebrow">Nivel ${roomData.currentLevel}</span>
+      <h1 class="viewer-title">${escapeHtml(title)}</h1>
+      <p class="viewer-hint">Tu mano, ordenada de menor a mayor. Se actualiza sola cuando juegues en la mesa. Mantenla en secreto.</p>
+      <div class="viewer-cards">${cardsHtml}</div>
+    </div>`;
+
+  updateViewerHighlight();
+
+  // --- Flash visual de error (solo si es una acción nueva) ---
+  const la = roomData.lastAction;
+  if (la && la.type === 'error' && la.ts !== lastRenderedActionTs) {
+    lastRenderedActionTs = la.ts;
+    const screenEl = app.querySelector('.viewer-screen');
+    if (screenEl) {
+      screenEl.classList.add('flash-error');
+      setTimeout(() => screenEl.classList.remove('flash-error'), 650);
+    }
+  } else if (la) {
+    lastRenderedActionTs = la.ts;
+  }
+}
+
+function initOnline(roomInfo) {
+  subscribeRoom(roomInfo.room, (roomData) => {
+    renderOnlineViewer(roomInfo, roomData);
+  });
+}
+
 function init() {
-  const hashInfo = parseHash();
-  renderViewer(hashInfo);
+  const roomInfo = parseRoomParams();
+  if (roomInfo) {
+    initOnline(roomInfo);
+  } else {
+    const hashInfo = parseHash();
+    renderOfflineViewer(hashInfo);
+    window.addEventListener('hashchange', () => {
+      renderOfflineViewer(parseHash());
+    });
+  }
 }
 
 window.addEventListener('DOMContentLoaded', init);
-window.addEventListener('hashchange', () => {
-  const hashInfo = parseHash();
-  renderViewer(hashInfo);
-});

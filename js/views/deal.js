@@ -2,7 +2,8 @@
 // Author: Laura Sanz Lobo
 
 import { state, playerLabel } from '../state.js';
-import { buildPlayerUrl } from '../qr.js';
+import { buildPlayerUrl, buildOnlinePlayerUrl } from '../qr.js';
+import { createUniqueRoomCode, pushRoomState } from '../services/sync.js';
 
 function escapeHtml(str) {
   return String(str)
@@ -37,6 +38,10 @@ export function renderDeal(renderCallback) {
     if (renderCallback) renderCallback();
   };
 
+  const onlineHint = state.isOnline
+    ? '<p>Escaneo único: a partir de ahora las manos se actualizarán solas en cada nivel.</p>'
+    : '<p>Cada jugador escanea su propio código y consulta su mano en el visor individual.</p>';
+
   return `
     <div class="screen screen-deal">
       <div class="topbar">
@@ -45,21 +50,48 @@ export function renderDeal(renderCallback) {
       </div>
       <div class="level-heading">
         <h2>Nivel ${level} de ${state.maxLevels}</h2>
-        <p>Cada jugador escanea su propio código y consulta su mano en el visor individual.</p>
+        ${onlineHint}
       </div>
       <div class="qr-grid${gridClass}${layoutClass}">${cards}</div>
       <button class="btn btn-primary btn-block" onclick="window.goToTable()">Ir a la mesa de juego</button>
     </div>`;
 }
 
-export function mountQrCodes() {
+export async function mountQrCodes() {
   const level = state.currentLevel;
+
+  // si es partida online y aún no hay sala, la creamos ahora (escaneo único) 
+  if (state.isOnline && !state.roomCode) {
+    state.roomCode = await createUniqueRoomCode();
+    state.roomCreatedAt = Date.now();
+    // Empuja el estado inicial para que exista el nodo antes de que escaneen el QR
+    const players = {};
+    for (let p = 0; p < state.numPlayers; p++) {
+      players[p] = { hand: state.hands[p].slice(), playedCount: 0 };
+    }
+    await pushRoomState(state.roomCode, {
+      createdAt: state.roomCreatedAt,
+      numPlayers: state.numPlayers,
+      playerNames: state.playerNames,
+      maxLevels: state.maxLevels,
+      currentLevel: state.currentLevel,
+      lives: state.lives,
+      stars: state.stars,
+      status: 'playing',
+      lastAction: null,
+      players,
+    });
+  }
+
   for (let p = 0; p < state.numPlayers; p++) {
     const el = document.getElementById(`qr-slot-${p}`);
     if (!el) continue;
     el.innerHTML = '';
-    const url = buildPlayerUrl(p, state.hands[p], level);
-    /* eslint-disable no-new */
+
+    const url = state.isOnline
+      ? buildOnlinePlayerUrl(state.roomCode, p)
+      : buildPlayerUrl(p, state.hands[p], level);
+
     new QRCode(el, {
       text: url,
       width: 150,

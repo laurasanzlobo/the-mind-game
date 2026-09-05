@@ -19,7 +19,11 @@ export const state = {
   lastAction: null,  
   soundOn: true,
   layoutMode: 'standard', 
-  pendingContinue: null,  
+  pendingContinue: null,
+
+  isOnline: false,       // true si esta partida usa una sala Firebase
+  roomCode: null,       
+  unsubscribeRoom: null, // función para cancelar el listener
 };
 
 export function resetState() {
@@ -38,8 +42,12 @@ export function resetState() {
   state.ninjaDiscards = [];
   state.errorDiscards = [];
   state.lastAction = null;
-  // soundOn y layoutMode se mantienen entre partidas
   state.pendingContinue = null;
+  if (state.unsubscribeRoom) { state.unsubscribeRoom(); }
+  state.isOnline = false;
+  state.roomCode = null;
+  state.unsubscribeRoom = null;
+  // soundOn y layoutMode se mantienen entre partidas
 }
 
 export function playerLabel(playerIndex) {

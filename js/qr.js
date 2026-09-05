@@ -4,14 +4,10 @@
 import { playerLabel } from './state.js';
 
 export function buildBaseUrl() {
-  return window.location.href.split('#')[0];
+  return window.location.href.split('#')[0].split('?')[0];
 }
 
-export function buildPlayerUrl(playerIndex, cards, level) {
-  const base = buildBaseUrl();
-  const name = playerLabel(playerIndex);
-  
-  // Modificamos la URL base para que apunte al visor móvil
+function toPlayerHtmlUrl(base) {
   let url = base;
   if (url.endsWith('index.html')) {
     url = url.replace('index.html', 'player.html');
@@ -20,8 +16,37 @@ export function buildPlayerUrl(playerIndex, cards, level) {
   } else {
     url += 'player.html';
   }
-  
-  return url + '#player=' + (playerIndex + 1) + '&level=' + level + '&cards=' + cards.join(',') + '&name=' + encodeURIComponent(name);
+  return url;
+}
+
+// --- MODO ONLINE: QR apunta a ?room=XXXX&player=N (escaneo único) ---
+export function buildOnlinePlayerUrl(roomCode, playerIndex) {
+  const base = toPlayerHtmlUrl(buildBaseUrl());
+  const name = playerLabel(playerIndex);
+  const params = new URLSearchParams({
+    room: roomCode,
+    player: String(playerIndex),
+    name,
+  });
+  return `${base}?${params.toString()}`;
+}
+
+export function parseRoomParams() {
+  const params = new URLSearchParams(window.location.search);
+  const room = params.get('room');
+  const playerRaw = params.get('player');
+  if (!room || playerRaw === null) return null;
+  const player = parseInt(playerRaw, 10);
+  if (isNaN(player)) return null;
+  const nameRaw = params.get('name');
+  return { room, player, name: nameRaw ? decodeURIComponent(nameRaw) : null };
+}
+
+// --- MODO OFFLINE (fallback): QR con datos embebidos en el hash ---
+export function buildPlayerUrl(playerIndex, cards, level) {
+  const base = toPlayerHtmlUrl(buildBaseUrl());
+  const name = playerLabel(playerIndex);
+  return base + '#player=' + (playerIndex + 1) + '&level=' + level + '&cards=' + cards.join(',') + '&name=' + encodeURIComponent(name);
 }
 
 export function parseHash() {

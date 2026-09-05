@@ -7,8 +7,8 @@ import { soundOk, soundError, soundNinja, soundLevelUp, soundVictory, soundDefea
 import { renderSetup } from './views/step-players.js';
 import { renderDeal, mountQrCodes } from './views/deal.js';
 import { renderTable, renderGameOver, renderVictory } from './views/table.js';
+import { pushRoomState, deleteRoom } from './services/sync.js';
 
-// Utilidad para barajar que he movido aquí para limpiar código
 function shuffle(arr) {
   const a = arr.slice();
   for (let i = a.length - 1; i > 0; i--) {
@@ -18,6 +18,36 @@ function shuffle(arr) {
   return a;
 }
 
+function buildRoomSnapshot(status) {
+  const players = {};
+  for (let p = 0; p < state.numPlayers; p++) {
+    const originalHand = (state.hands[p] || []).slice(); // ya es sufijo restante...
+    players[p] = {
+      hand: state.dealtHands ? state.dealtHands[p] : originalHand,
+      playedCount: state.dealtHands ? (state.dealtHands[p].length - state.hands[p].length) : 0,
+    };
+  }
+  return {
+    createdAt: state.roomCreatedAt || Date.now(),
+    numPlayers: state.numPlayers,
+    playerNames: state.playerNames,
+    maxLevels: state.maxLevels,
+    currentLevel: state.currentLevel,
+    lives: state.lives,
+    stars: state.stars,
+    status,
+    lastAction: state.lastAction
+      ? { type: state.lastAction.type, player: state.lastAction.player ?? null, card: state.lastAction.card ?? null, ts: Date.now() }
+      : null,
+    players,
+  };
+}
+
+function syncNow(status) {
+  if (!state.isOnline || !state.roomCode) return;
+  pushRoomState(state.roomCode, buildRoomSnapshot(status));
+}
+
 export function startLevel() {
   const deck = shuffle(Array.from({ length: 100 }, (_, i) => i + 1));
   const hands = [];
@@ -25,13 +55,24 @@ export function startLevel() {
     hands.push(deck.splice(0, state.currentLevel).sort((a, b) => a - b));
   }
   state.hands = hands;
+  // guardamos copia inmutable de la mano repartida para este nivel 
+  state.dealtHands = hands.map(h => h.slice());
+
   state.centralPile = null;
   state.pileOwner = null;
   state.ninjaDiscards = new Array(state.numPlayers).fill(null);
   state.errorDiscards = new Array(state.numPlayers).fill(null);
   state.lastAction = null;
   state.pendingContinue = null;
-  state.screen = 'deal';
+
+  // en partidas online, tras el nivel 1 nos saltamos la pantalla de QR 
+  if (state.isOnline && state.currentLevel > 1) {
+    state.screen = 'table';
+  } else {
+    state.screen = 'deal';
+  }
+
+  syncNow('playing');
 }
 
 function applyRewards(level) {
@@ -49,17 +90,16 @@ function resolveTurnPause() {
     const victory = finishedLevel >= state.maxLevels;
     state.pendingContinue = { type: 'levelup', level: finishedLevel, victory };
     if (victory) soundVictory(); else soundLevelUp();
+    syncNow(victory ? 'victory' : 'levelup');
     return;
   }
 
   if (state.lastAction && state.lastAction.type === 'error') {
     state.pendingContinue = { type: 'error' };
   }
+  syncNow('playing');
 }
 
-// ==========================================
-// EXPOSICIÓN DE FUNCIONES GLOBALES PARA EL DOM
-// ==========================================
 window.toggleSoundGlobal = () => {
   toggleSound(() => render());
 };
@@ -105,6 +145,7 @@ window.playCard = (playerIndex) => {
   if (state.lives <= 0) {
     state.screen = 'gameover';
     soundDefeat();
+    syncNow('gameover');
     render();
     return;
   }
@@ -153,12 +194,14 @@ window.continueGame = () => {
   if (pc.type === 'levelup') {
     if (pc.victory) {
       state.screen = 'victory';
+      syncNow('victory');
     } else {
       state.currentLevel = pc.level + 1;
-      startLevel();
+      startLevel(); // ya sincroniza y decide si mostrar 'deal' o saltar a 'table'
     }
   } else if (pc.type === 'error') {
     state.lastAction = null;
+    syncNow('playing');
   }
 
   render();
@@ -167,31 +210,37 @@ window.continueGame = () => {
 window.confirmResetGame = () => {
   const confirmed = window.confirm('¿Seguro que quieres abandonar la partida y volver al inicio? Se perderá el progreso actual.');
   if (!confirmed) return;
+  if (state.isOnline && state.roomCode) deleteRoom(state.roomCode);
   resetState();
   render();
 };
 
 window.confirmResetGameSilent = () => {
+  if (state.isOnline && state.roomCode) deleteRoom(state.roomCode);
   resetState();
   render();
 };
 
 window.playAgainSamePlayers = () => {
   const n = state.numPlayers;
+  const names = state.playerNames.slice();
+  const wasOnline = state.isOnline;
+  if (wasOnline && state.roomCode) deleteRoom(state.roomCode);
   resetState();
   state.numPlayers = n;
+  state.playerNames = names;
   state.maxLevels = CONFIG[n].levels;
   state.lives = CONFIG[n].lives;
   state.stars = CONFIG[n].stars;
   state.currentLevel = 1;
   state.setupStep = 'count';
+  // Si la partida anterior era online, generamos sala nueva y mostramos QR de nuevo
+  state.isOnline = wasOnline;
   startLevel();
+  if (wasOnline) state.screen = 'deal'; // fuerza QR aunque no sea "nivel 1 real" de sala nueva
   render();
 };
 
-// ==========================================
-// RENDERIZADO PRINCIPAL
-// ==========================================
 function render() {
   const app = document.getElementById('app');
   switch (state.screen) {
@@ -216,5 +265,4 @@ function render() {
   }
 }
 
-// Inicialización de la aplicación al cargar el DOM
 window.addEventListener('DOMContentLoaded', render);

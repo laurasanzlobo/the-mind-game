@@ -47,7 +47,13 @@ export function renderNameForm(renderCallback) {
     state.currentLevel = 1;
     state.setupStep = 'count';
     state.pendingNumPlayers = null;
-    
+    state.isOnline = window.confirm(
+      '¿Quieres jugar con sincronización automática de los móviles?\n\n' +
+      'Aceptar = los móviles se actualizan solos (requiere conexión a internet).\n' +
+      'Cancelar = modo clásico, cada jugador debe volver a escanear en cada nivel.'
+    );
+    state.roomCode = null; // se generará en deal.js al crear la sala
+
     state.screen = 'deal';
     
     import('../main.js').then(module => {
