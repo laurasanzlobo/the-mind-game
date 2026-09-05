@@ -248,15 +248,22 @@ export function renderTable() {
     ? `<div class="round-table${isMobile ? ' layout-mobile-table' : ''}">${pileHtml}${playerButtons}</div>`
     : `<div class="table-area">${pileHtml}<div class="players-grid">${playerButtons}</div></div>`;
 
-  const errorContinueHtml = (state.pendingContinue && state.pendingContinue.type === 'error')
-    ? '<div class="continue-bar"><button class="btn btn-primary btn-block" onclick="window.continueGame()">Continuar partida</button></div>'
+  const isErrorPending = state.pendingContinue && state.pendingContinue.type === 'error';
+  const isDefeatPending = state.pendingContinue && state.pendingContinue.type === 'defeat';
+  const errorContinueHtml = (isErrorPending || isDefeatPending)
+    ? `<div class="continue-bar">
+        <button class="btn ${isDefeatPending ? 'btn-defeat' : 'btn-primary'} btn-block" onclick="window.continueGame()">
+          ${isDefeatPending ? 'Ver resultado final' : 'Continuar partida'}
+        </button>
+      </div>`
     : '';
 
-  const rewardType = REWARDS[state.currentLevel];
-  const reward = rewardLabel(state.currentLevel);
+  const isLastLevel = state.currentLevel === state.maxLevels;
+  const rewardType = isLastLevel ? null : REWARDS[state.currentLevel];
+  const reward = isLastLevel ? null : rewardLabel(state.currentLevel);
   const rewardCls = rewardType === 'life' ? 'reward-life' : rewardType === 'star' ? 'reward-star' : '';
   const levelRewardHtml = reward ? `<span class="level-reward ${rewardCls}">Recompensa: ${reward}</span>` : '';
-
+  
   return `
     <div class="screen screen-table${isCircular ? ' layout-tablet' : ''}">
       <div class="topbar">

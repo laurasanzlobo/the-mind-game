@@ -51,7 +51,6 @@ function renderOfflineViewer(info) {
     <div class="screen viewer-screen">
       <span class="viewer-eyebrow">${info.level ? 'Nivel ' + info.level : 'The Mind'}</span>
       <h1 class="viewer-title">${title}</h1>
-      <p class="viewer-hint">Tu mano, ordenada de menor a mayor. Toca una carta al jugarla para marcarla como descartada. Mantenla en secreto.</p>
       <div class="viewer-cards">${cardsHtml}</div>
     </div>`;
 
@@ -118,7 +117,6 @@ function renderOnlineViewer(roomInfo, roomData) {
     <div class="screen viewer-screen">
       <span class="viewer-eyebrow">Nivel ${roomData.currentLevel}</span>
       <h1 class="viewer-title">${escapeHtml(title)}</h1>
-      <p class="viewer-hint">Tu mano, ordenada de menor a mayor. Se actualiza sola cuando juegues en la mesa. Mantenla en secreto.</p>
       <div class="viewer-cards">${cardsHtml}</div>
     </div>`;
 

@@ -21,10 +21,11 @@ function shuffle(arr) {
 function buildRoomSnapshot(status) {
   const players = {};
   for (let p = 0; p < state.numPlayers; p++) {
-    const originalHand = (state.hands[p] || []).slice(); // ya es sufijo restante...
+    const dealt = state.dealtHands ? state.dealtHands[p] : state.hands[p];
+    const remaining = state.hands[p] || [];
     players[p] = {
-      hand: state.dealtHands ? state.dealtHands[p] : originalHand,
-      playedCount: state.dealtHands ? (state.dealtHands[p].length - state.hands[p].length) : 0,
+      hand: dealt,
+      playedCount: dealt.length - remaining.length,
     };
   }
   return {
@@ -55,7 +56,6 @@ export function startLevel() {
     hands.push(deck.splice(0, state.currentLevel).sort((a, b) => a - b));
   }
   state.hands = hands;
-  // guardamos copia inmutable de la mano repartida para este nivel 
   state.dealtHands = hands.map(h => h.slice());
 
   state.centralPile = null;
@@ -65,7 +65,7 @@ export function startLevel() {
   state.lastAction = null;
   state.pendingContinue = null;
 
-  // en partidas online, tras el nivel 1 nos saltamos la pantalla de QR 
+  // En partidas online, tras el nivel 1 nos saltamos la pantalla de QR
   if (state.isOnline && state.currentLevel > 1) {
     state.screen = 'table';
   } else {
@@ -109,7 +109,7 @@ window.playCard = (playerIndex) => {
   const hand = state.hands[playerIndex];
   if (!hand || hand.length === 0) return;
 
-  const card = hand[0]; 
+  const card = hand[0];
   const allLowest = Math.min(...state.hands.filter(h => h.length > 0).map(h => h[0]));
 
   hand.shift();
@@ -125,7 +125,7 @@ window.playCard = (playerIndex) => {
     soundOk();
   } else {
     state.lives -= 1;
-    
+
     state.errorDiscards = new Array(state.numPlayers).fill(null);
     state.hands.forEach((h, idx) => {
       if (idx === playerIndex) return;
@@ -143,9 +143,9 @@ window.playCard = (playerIndex) => {
   }
 
   if (state.lives <= 0) {
-    state.screen = 'gameover';
+    state.pendingContinue = { type: 'defeat' };
     soundDefeat();
-    syncNow('gameover');
+    syncNow('error'); // los visores reciben el flash de error, aún no el estado final
     render();
     return;
   }
@@ -168,7 +168,7 @@ window.useNinjaStar = () => {
   if (!state.ninjaDiscards || state.ninjaDiscards.length !== state.numPlayers) {
     state.ninjaDiscards = new Array(state.numPlayers).fill(null);
   }
-  
+
   state.hands.forEach((h, idx) => {
     if (h.length > 0) {
       const card = h.shift();
@@ -197,11 +197,14 @@ window.continueGame = () => {
       syncNow('victory');
     } else {
       state.currentLevel = pc.level + 1;
-      startLevel(); // ya sincroniza y decide si mostrar 'deal' o saltar a 'table'
+      startLevel();
     }
   } else if (pc.type === 'error') {
     state.lastAction = null;
     syncNow('playing');
+  } else if (pc.type === 'defeat') {
+    state.screen = 'gameover';
+    syncNow('gameover');
   }
 
   render();
@@ -225,8 +228,12 @@ window.playAgainSamePlayers = () => {
   const n = state.numPlayers;
   const names = state.playerNames.slice();
   const wasOnline = state.isOnline;
-  if (wasOnline && state.roomCode) deleteRoom(state.roomCode);
+  const oldRoomCode = state.roomCode;
+
+  if (wasOnline && oldRoomCode) deleteRoom(oldRoomCode);
+
   resetState();
+
   state.numPlayers = n;
   state.playerNames = names;
   state.maxLevels = CONFIG[n].levels;
@@ -234,33 +241,36 @@ window.playAgainSamePlayers = () => {
   state.stars = CONFIG[n].stars;
   state.currentLevel = 1;
   state.setupStep = 'count';
-  // Si la partida anterior era online, generamos sala nueva y mostramos QR de nuevo
+
+  // Nueva partida online: se genera una sala nueva y hay que reescanear una vez.
   state.isOnline = wasOnline;
+  state.roomCode = null;
+
   startLevel();
-  if (wasOnline) state.screen = 'deal'; // fuerza QR aunque no sea "nivel 1 real" de sala nueva
+  if (wasOnline) state.screen = 'deal';
   render();
 };
 
 function render() {
   const app = document.getElementById('app');
   switch (state.screen) {
-    case 'setup': 
-      app.innerHTML = renderSetup(() => render()); 
+    case 'setup':
+      app.innerHTML = renderSetup(() => render());
       break;
-    case 'deal': 
-      app.innerHTML = renderDeal(() => render()); 
-      mountQrCodes(); 
+    case 'deal':
+      app.innerHTML = renderDeal(() => render());
+      mountQrCodes();
       break;
-    case 'table': 
-      app.innerHTML = renderTable(); 
+    case 'table':
+      app.innerHTML = renderTable();
       break;
-    case 'gameover': 
-      app.innerHTML = renderGameOver(); 
+    case 'gameover':
+      app.innerHTML = renderGameOver();
       break;
-    case 'victory': 
-      app.innerHTML = renderVictory(); 
+    case 'victory':
+      app.innerHTML = renderVictory();
       break;
-    default: 
+    default:
       app.innerHTML = renderSetup(() => render());
   }
 }

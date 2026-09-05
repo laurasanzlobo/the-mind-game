@@ -275,13 +275,12 @@
   animation: pop-in .25s ease;
   z-index: 20;
 }
-.continue-bar .btn {
-  width: 100%;
+.continue-bar .btn-defeat {
   background: var(--warn);
   color: #1a0a10;
   box-shadow: 0 12px 30px -12px rgba(255, 84, 112, 0.55);
 }
-.continue-bar .btn:hover { filter: brightness(1.08); }
+.continue-bar .btn-defeat:hover { filter: brightness(1.08); }
 
 .levelup-bar .btn-compact {
   width: 100%;
