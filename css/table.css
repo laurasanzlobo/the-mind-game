@@ -687,3 +687,29 @@
   margin-left: 10px;
   justify-content: flex-start;
 }
+
+/* ===================================================================
+   LÍNEA DE ORIENTACIÓN DE NÚMEROS (MODO MÓVIL Y TABLET / IPAD)
+   =================================================================== */
+.screen-table.layout-tablet .pile-number:not(.is-empty),
+.round-table .pile-number:not(.is-empty) {
+  text-decoration: underline;
+  text-decoration-thickness: clamp(2px, 0.4vh, 3.5px);
+  text-underline-offset: clamp(4px, 0.9vh, 8px);
+  text-decoration-skip-ink: none;
+  text-decoration-color: currentColor;
+}
+
+.screen-table.layout-tablet .table-chip,
+.round-table .table-chip {
+  text-decoration: underline;
+  text-decoration-thickness: 1.8px;
+  text-underline-offset: 3px;
+  text-decoration-skip-ink: none;
+  text-decoration-color: currentColor;
+}
+
+.round-table.layout-mobile-table .table-chip {
+  text-decoration-thickness: 1.2px;
+  text-underline-offset: 2px;
+}
