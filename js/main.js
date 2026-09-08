@@ -8,6 +8,7 @@ import { renderSetup } from './views/step-players.js';
 import { renderDeal, mountQrCodes } from './views/deal.js';
 import { renderTable, renderGameOver, renderVictory } from './views/table.js';
 import { pushRoomState, deleteRoom } from './services/sync.js';
+import { showConfirmModal } from './views/modal.js';
 
 function shuffle(arr) {
   const a = arr.slice();
@@ -160,28 +161,38 @@ window.useNinjaStar = () => {
   const anyCards = state.hands.some(h => h.length > 0);
   if (!anyCards) return;
 
-  const confirmed = window.confirm('¿Usar una Estrella Ninja? Se revelará y descartará la carta más baja de cada jugador, manteniendo las vidas intactas.');
-  if (!confirmed) return;
+  showConfirmModal({
+    badgeClass: 'badge-ninja',
+    badgeHtml: '<span class="modal-shuriken"></span>',
+    title: '¿Usar Estrella Ninja?',
+    description: 'Se revelará y descartará la carta más baja de cada jugador.',
+    confirmText: 'Usar estrella',
+    cancelText: 'Cancelar',
+    confirmBtnClass: 'btn-ninja',
+    onConfirm: () => {
+      if (state.screen !== 'table' || state.pendingContinue || state.stars <= 0) return;
 
-  state.stars -= 1;
-  const revealed = [];
-  if (!state.ninjaDiscards || state.ninjaDiscards.length !== state.numPlayers) {
-    state.ninjaDiscards = new Array(state.numPlayers).fill(null);
-  }
+      state.stars -= 1;
+      const revealed = [];
+      if (!state.ninjaDiscards || state.ninjaDiscards.length !== state.numPlayers) {
+        state.ninjaDiscards = new Array(state.numPlayers).fill(null);
+      }
 
-  state.hands.forEach((h, idx) => {
-    if (h.length > 0) {
-      const card = h.shift();
-      revealed.push({ player: idx + 1, card });
-      state.ninjaDiscards[idx] = card;
-    }
+      state.hands.forEach((h, idx) => {
+        if (h.length > 0) {
+          const card = h.shift();
+          revealed.push({ player: idx + 1, card });
+          state.ninjaDiscards[idx] = card;
+        }
+      });
+
+      state.lastAction = { type: 'ninja', revealed };
+      soundNinja();
+
+      resolveTurnPause();
+      render();
+    },
   });
-
-  state.lastAction = { type: 'ninja', revealed };
-  soundNinja();
-
-  resolveTurnPause();
-  render();
 };
 
 window.continueGame = () => {
@@ -211,11 +222,20 @@ window.continueGame = () => {
 };
 
 window.confirmResetGame = () => {
-  const confirmed = window.confirm('¿Seguro que quieres abandonar la partida y volver al inicio? Se perderá el progreso actual.');
-  if (!confirmed) return;
-  if (state.isOnline && state.roomCode) deleteRoom(state.roomCode);
-  resetState();
-  render();
+  showConfirmModal({
+    badgeClass: 'badge-warn',
+    badgeHtml: '<span class="modal-warn-icon">⟲</span>',
+    title: '¿Abandonar partida?',
+    description: '¿Seguro que quieres salir y volver al inicio? Se perderá todo el progreso de la partida actual.',
+    confirmText: 'Abandonar partida',
+    cancelText: 'Seguir jugando',
+    confirmBtnClass: 'btn-danger',
+    onConfirm: () => {
+      if (state.isOnline && state.roomCode) deleteRoom(state.roomCode);
+      resetState();
+      render();
+    },
+  });
 };
 
 window.confirmResetGameSilent = () => {

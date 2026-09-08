@@ -174,6 +174,20 @@ button {
 }
 .btn-primary:hover { filter: brightness(1.08); }
 
+.btn-ninja {
+  background: var(--gold);
+  color: #0a0a13;
+  box-shadow: 0 12px 30px -12px rgba(242, 184, 75, 0.65);
+}
+.btn-ninja:hover { filter: brightness(1.08); }
+
+.btn-danger {
+  background: var(--warn);
+  color: #ffffff;
+  box-shadow: 0 12px 30px -12px rgba(255, 84, 112, 0.65);
+}
+.btn-danger:hover { filter: brightness(1.08); }
+
 .btn-ghost {
   background: transparent;
   color: var(--text-dim);
@@ -221,4 +235,124 @@ button {
   font-size: clamp(0.76rem, 1.8vh, 0.86rem);
   font-weight: 700;
   white-space: nowrap;
+}
+
+/* ===================== MODALES Y VENTANAS POPUP ===================== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 10, 19, 0.78);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(16px, 4vw, 32px);
+  z-index: 1000;
+  animation: modal-fade 0.2s ease-out both;
+}
+
+@keyframes modal-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-card {
+  background: var(--panel);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 24px 70px -10px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  max-width: 380px;
+  width: 100%;
+  padding: clamp(24px, 4vh, 34px) clamp(20px, 5vw, 30px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+  animation: modal-pop 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes modal-pop {
+  from { opacity: 0; transform: scale(0.92) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.modal-badge {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 6px;
+  flex-shrink: 0;
+}
+
+.modal-badge.badge-ninja {
+  background: var(--gold-dim);
+  border: 1px solid rgba(242, 184, 75, 0.45);
+  box-shadow: 0 0 26px -4px rgba(242, 184, 75, 0.35);
+}
+
+.modal-badge .modal-shuriken {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.modal-badge .modal-shuriken::before,
+.modal-badge .modal-shuriken::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 3px;
+  background: var(--gold);
+  box-shadow: 0 0 10px rgba(242, 184, 75, 0.55);
+}
+
+.modal-badge .modal-shuriken::after {
+  transform: rotate(45deg);
+}
+
+.modal-badge.badge-warn {
+  background: var(--warn-dim);
+  border: 1px solid rgba(255, 84, 112, 0.45);
+  box-shadow: 0 0 26px -4px rgba(255, 84, 112, 0.35);
+  color: var(--warn);
+}
+
+.modal-badge .modal-warn-icon {
+  font-size: 1.8rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
+.modal-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(1.3rem, 3.2vh, 1.6rem);
+  font-weight: 600;
+  margin: 0;
+  color: var(--text);
+  line-height: 1.25;
+}
+
+.modal-desc {
+  font-size: clamp(0.85rem, 1.9vh, 0.95rem);
+  color: var(--text-dim);
+  line-height: 1.45;
+  margin: 0;
+  max-width: 32ch;
+}
+
+.modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  margin-top: 10px;
 }
