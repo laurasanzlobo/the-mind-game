@@ -229,10 +229,14 @@ export function renderTable() {
 
   const isLevelUp = state.pendingContinue && state.pendingContinue.type === 'levelup' && !state.pendingContinue.victory;
   const isError = state.lastAction && state.lastAction.type === 'error';
+  const isErrorPending = state.pendingContinue && state.pendingContinue.type === 'error';
+  const isDefeatPending = state.pendingContinue && state.pendingContinue.type === 'defeat';
 
   let pileMessage = '';
   if (isLevelUp) {
     pileMessage = '<span class="pile-success">¡Nivel superado!</span>';
+  } else if (isDefeatPending) {
+    pileMessage = '<span class="pile-error pile-defeat-msg">¡Sin vidas!</span>';
   } else if (isError) {
     pileMessage = '<span class="pile-error">¡Fallo!</span>';
   }
@@ -248,8 +252,6 @@ export function renderTable() {
     ? `<div class="round-table${isMobile ? ' layout-mobile-table' : ''}">${pileHtml}${playerButtons}</div>`
     : `<div class="table-area">${pileHtml}<div class="players-grid">${playerButtons}</div></div>`;
 
-  const isErrorPending = state.pendingContinue && state.pendingContinue.type === 'error';
-  const isDefeatPending = state.pendingContinue && state.pendingContinue.type === 'defeat';
   const errorContinueHtml = (isErrorPending || isDefeatPending)
     ? `<div class="continue-bar">
         <button class="btn ${isDefeatPending ? 'btn-defeat' : 'btn-primary'} btn-block" onclick="window.continueGame()">
@@ -265,7 +267,7 @@ export function renderTable() {
   const levelRewardHtml = reward ? `<span class="level-reward ${rewardCls}">Recompensa: ${reward}</span>` : '';
   
   return `
-    <div class="screen screen-table${isCircular ? ' layout-tablet' : ''}">
+    <div class="screen screen-table${isCircular ? ' layout-tablet' : ''}${isDefeatPending ? ' is-defeat-pending' : ''}">
       <div class="topbar">
         ${brandMark()}
         <div style="display:flex; gap:8px;">
@@ -303,9 +305,9 @@ export function renderGameOver() {
       ${brandMark()}
       <div class="end-emblem defeat">✕</div>
       <h1 class="end-title">Os habéis quedado sin vidas :(</h1>
-      <p class="end-sub">Habéis llegado hasta el nivel ${state.currentLevel} de ${state.maxLevels} con ${state.numPlayers} jugadores.</p>
+      <p class="end-sub">Habéis llegado hasta el nivel ${state.currentLevel} de ${state.maxLevels}.</p>
       <div class="end-actions">
-        <button class="btn btn-primary btn-block" onclick="window.playAgainSamePlayers()">Reintentar con ${state.numPlayers} jugadores</button>
+        <button class="btn btn-primary btn-block" onclick="window.playAgainSamePlayers()">Reintentar</button>
         <button class="btn btn-ghost btn-block" onclick="window.confirmResetGameSilent()">Cambiar número de jugadores</button>
       </div>
     </div>`;
