@@ -27,6 +27,7 @@
   overflow-y: auto;
 }
 .viewer-card {
+  order: 1;
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
@@ -47,6 +48,7 @@
   box-shadow: 0 0 24px -8px var(--mind-glow);
 }
 .viewer-card.is-played {
+  order: 2;
   opacity: 0.2;
   background-color: var(--void);
   border-color: transparent;
@@ -62,4 +64,20 @@
   0%   { background-color: transparent; }
   25%  { background-color: rgba(255, 84, 112, 0.22); }
   100% { background-color: transparent; }
+}
+
+/* ===================== PANTALLA DE BIENVENIDA (VER MIS CARTAS) ===================== */
+.viewer-screen.viewer-welcome {
+  justify-content: center;
+  padding-top: 0;
+}
+.viewer-screen.viewer-welcome .viewer-hint {
+  margin-bottom: clamp(18px, 4vh, 32px);
+}
+.viewer-start-btn {
+  max-width: 320px;
+  padding: clamp(14px, 2.4vh, 18px) 28px;
+  font-size: clamp(1rem, 2.2vh, 1.2rem);
+  letter-spacing: 0.02em;
+  cursor: pointer;
 }
